@@ -1,0 +1,23 @@
+.topbar {
+  background: #283593;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+
+  .app-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 8px;
+    letter-spacing: .5px;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  button {
+    color: #fff;
+  }
+}

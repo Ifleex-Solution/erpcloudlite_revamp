@@ -1,0 +1,151 @@
+<div class="page-header">
+  <div class="page-title">
+    <mat-icon class="title-icon">store</mat-icon>
+    <h2>Store List</h2>
+  </div>
+  <button mat-flat-button color="primary" (click)="addStore()">
+    <mat-icon>add</mat-icon>
+    Add Store
+  </button>
+</div>
+
+<mat-card class="page-card">
+  <mat-card-content>
+
+    <!-- Search bar -->
+    <div class="table-toolbar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search stores</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Store code, name..."
+        >
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Refresh" (click)="loadStores()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    <!-- Loading spinner -->
+    @if (loading) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+
+    <!-- Table -->
+    <div class="table-container" [class.table-loading]="loading">
+      <table mat-table [dataSource]="dataSource" class="store-table">
+
+        <!-- # Column -->
+        <ng-container matColumnDef="sl">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let i = index">{{ pageIndex * pageSize + i + 1 }}</td>
+        </ng-container>
+
+        <!-- Store Code -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Store Code</th>
+          <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+        </ng-container>
+
+        <!-- Store Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Store Name</th>
+          <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+        </ng-container>
+
+        <!-- Store Nature -->
+        <ng-container matColumnDef="store_nature">
+          <th mat-header-cell *matHeaderCellDef>Nature</th>
+          <td mat-cell *matCellDef="let row">{{ row.store_nature }}</td>
+        </ng-container>
+
+        <!-- GRN -->
+        <ng-container matColumnDef="auto_grn">
+          <th mat-header-cell *matHeaderCellDef>GRN</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="chip" [class.enabled-chip]="row.auto_grn === 1" [class.disabled-chip]="row.auto_grn === 0">
+              {{ grnLabel(row.auto_grn) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- GDN -->
+        <ng-container matColumnDef="auto_gdn">
+          <th mat-header-cell *matHeaderCellDef>GDN</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="chip" [class.enabled-chip]="row.auto_gdn === 1" [class.disabled-chip]="row.auto_gdn === 0">
+              {{ gdnLabel(row.auto_gdn) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Default Stock -->
+        <ng-container matColumnDef="dstock">
+          <th mat-header-cell *matHeaderCellDef>Stock Type</th>
+          <td mat-cell *matCellDef="let row">{{ stockLabel(row.dstock) }}</td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="chip" [class.status-active]="row.status === 1" [class.status-inactive]="row.status === 0">
+              {{ row.status === 1 ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Edit"
+              (click)="editStore(row)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Delete"
+              (click)="deleteStore(row)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- No data row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+            <mat-icon>inbox</mat-icon>
+            <p>No stores found</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    ></mat-paginator>
+
+  </mat-card-content>
+</mat-card>

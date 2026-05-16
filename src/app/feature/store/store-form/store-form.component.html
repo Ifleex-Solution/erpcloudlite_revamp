@@ -1,0 +1,152 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">storefront</mat-icon>
+    <span class="bc-link" (click)="goBack()">Store</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Store' : 'Add Store' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Back to List
+  </button>
+</div>
+
+<!-- Form Card -->
+<div class="form-card">
+
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit' : 'add_business' }}</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Store' : 'Add Store' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update store information below' : 'Fill in the details to create a new store' }}</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading store data...</p>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- Section: Basic Info -->
+      <div class="section-label">
+        <mat-icon>info</mat-icon> Basic Information
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Store Code</mat-label>
+          <mat-icon matPrefix class="field-prefix">qr_code</mat-icon>
+          <input matInput formControlName="code" placeholder="e.g. ST-001">
+          @if (f['code'].hasError('required') && f['code'].touched) {
+            <mat-error>Store code is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Store Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">store</mat-icon>
+          <input matInput formControlName="name" placeholder="Enter store name">
+          @if (f['name'].hasError('required') && f['name'].touched) {
+            <mat-error>Store name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Store Nature</mat-label>
+          <mat-icon matPrefix class="field-prefix">category</mat-icon>
+          <mat-select formControlName="store_nature">
+            <mat-option value="Showroom">🏬 Showroom</mat-option>
+            <mat-option value="Warehouse">🏭 Warehouse</mat-option>
+            <mat-option value="Outlet">🏪 Outlet</mat-option>
+          </mat-select>
+          @if (f['store_nature'].hasError('required') && f['store_nature'].touched) {
+            <mat-error>Store nature is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">✅ Active</mat-option>
+            <mat-option [value]="0">❌ Inactive</mat-option>
+          </mat-select>
+          @if (f['status'].hasError('required') && f['status'].touched) {
+            <mat-error>Status is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Section: Settings -->
+      <div class="section-label">
+        <mat-icon>settings</mat-icon> Store Settings
+      </div>
+
+      <div class="form-row three-col">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Auto GRN</mat-label>
+          <mat-icon matPrefix class="field-prefix">input</mat-icon>
+          <mat-select formControlName="auto_grn">
+            <mat-option [value]="1">Enable</mat-option>
+            <mat-option [value]="0">Disable</mat-option>
+          </mat-select>
+          <mat-hint>Goods Receipt Note</mat-hint>
+          @if (f['auto_grn'].hasError('required') && f['auto_grn'].touched) {
+            <mat-error>Required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Auto GDN</mat-label>
+          <mat-icon matPrefix class="field-prefix">output</mat-icon>
+          <mat-select formControlName="auto_gdn">
+            <mat-option [value]="1">Enable</mat-option>
+            <mat-option [value]="0">Disable</mat-option>
+          </mat-select>
+          <mat-hint>Goods Delivery Note</mat-hint>
+          @if (f['auto_gdn'].hasError('required') && f['auto_gdn'].touched) {
+            <mat-error>Required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Default Stock</mat-label>
+          <mat-icon matPrefix class="field-prefix">inventory</mat-icon>
+          <mat-select formControlName="dstock">
+            <mat-option [value]="1">Master Stock</mat-option>
+            <mat-option [value]="0">Substock</mat-option>
+          </mat-select>
+          <mat-hint>Stock type</mat-hint>
+          @if (f['dstock'].hasError('required') && f['dstock'].touched) {
+            <mat-error>Required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <mat-icon>{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
+            <span>{{ isEdit ? 'Update Store' : 'Save Store' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>
