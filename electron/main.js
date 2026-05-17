@@ -45,7 +45,9 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: path.join(__dirname, '../public/favicon.ico'),
+    icon: process.platform === 'win32'
+      ? path.join(__dirname, '../public/icon-256.ico')
+      : path.join(__dirname, '../public/icon-512.png'),
     show: false,
     title: 'ErpCloudLite',
   });

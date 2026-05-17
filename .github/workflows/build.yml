@@ -34,12 +34,19 @@ jobs:
       - name: Build Angular app
         run: npx ng build --base-href ./
 
-      - name: Generate 512x512 icon for macOS
+      - name: Generate icon for Windows
+        if: matrix.platform == 'windows'
+        run: |
+          python -m venv C:\iconvenv
+          C:\iconvenv\Scripts\pip install Pillow --quiet
+          C:\iconvenv\Scripts\python scripts/generate-icon.py win
+
+      - name: Generate icon for macOS
         if: matrix.platform == 'mac'
         run: |
           python3 -m venv /tmp/iconvenv
           /tmp/iconvenv/bin/pip install Pillow --quiet
-          /tmp/iconvenv/bin/python scripts/generate-icon.py
+          /tmp/iconvenv/bin/python scripts/generate-icon.py mac
 
       - name: Package with electron-builder (Windows)
         if: matrix.platform == 'windows'
