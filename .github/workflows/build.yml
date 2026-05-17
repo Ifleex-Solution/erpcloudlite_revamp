@@ -3,8 +3,8 @@ name: Build Electron App
 on:
   push:
     tags:
-      - 'v*'        # Trigger on version tags like v1.0.0
-  workflow_dispatch: # Allow manual trigger from GitHub UI
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,8 +15,6 @@ jobs:
             platform: windows
           - os: macos-latest
             platform: mac
-          - os: ubuntu-latest
-            platform: linux
 
     runs-on: ${{ matrix.os }}
 
@@ -48,12 +46,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Package with electron-builder (Linux)
-        if: matrix.platform == 'linux'
-        run: npx electron-builder --linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -61,7 +53,6 @@ jobs:
           path: |
             electron-dist/*.exe
             electron-dist/*.dmg
-            electron-dist/*.AppImage
             electron-dist/*.zip
           if-no-files-found: ignore
           retention-days: 30
