@@ -1,0 +1,67 @@
+name: Build Electron App
+
+on:
+  push:
+    tags:
+      - 'v*'        # Trigger on version tags like v1.0.0
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: mac
+          - os: ubuntu-latest
+            platform: linux
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npx ng build --base-href ./
+
+      - name: Package with electron-builder (Windows)
+        if: matrix.platform == 'windows'
+        run: npx electron-builder --win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package with electron-builder (macOS)
+        if: matrix.platform == 'mac'
+        run: npx electron-builder --mac
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package with electron-builder (Linux)
+        if: matrix.platform == 'linux'
+        run: npx electron-builder --linux
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ErpCloudLite-${{ matrix.platform }}
+          path: |
+            electron-dist/*.exe
+            electron-dist/*.dmg
+            electron-dist/*.AppImage
+            electron-dist/*.zip
+          if-no-files-found: ignore
+          retention-days: 30

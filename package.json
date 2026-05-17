@@ -1,16 +1,21 @@
 {
   "name": "erpcloudlite-revamp",
   "version": "0.0.0",
+  "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:erpcloudlite-revamp": "node dist/erpcloudlite-revamp/server/server.mjs"
+    "electron:dev": "set ELECTRON_DEV=true && electron .",
+    "electron:start": "concurrently \"ng serve\" \"wait-on http://localhost:4200 && set ELECTRON_DEV=true && electron .\"",
+    "electron:build": "ng build --base-href ./ && electron .",
+    "electron:pack": "ng build --base-href ./ && electron-builder"
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^19.2.22",
     "@angular/cdk": "^19.2.0",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
@@ -34,12 +39,48 @@
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
+    "concurrently": "^9.2.1",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "wait-on": "^8.0.5"
+  },
+  "build": {
+    "appId": "com.erpcloudlite.app",
+    "productName": "ErpCloudLite",
+    "directories": {
+      "output": "electron-dist"
+    },
+    "files": [
+      "electron/**/*",
+      "dist/erpcloudlite-revamp/browser/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "public/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/favicon.ico",
+      "shortcutName": "ErpCloudLite"
+    },
+    "mac": {
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
+      "icon": "public/favicon.ico",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [{ "target": "AppImage", "arch": ["x64"] }],
+      "icon": "public/favicon.ico",
+      "category": "Office"
+    }
   }
 }
