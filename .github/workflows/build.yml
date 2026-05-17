@@ -36,7 +36,10 @@ jobs:
 
       - name: Generate 512x512 icon for macOS
         if: matrix.platform == 'mac'
-        run: pip3 install Pillow --quiet && python3 scripts/generate-icon.py
+        run: |
+          python3 -m venv /tmp/iconvenv
+          /tmp/iconvenv/bin/pip install Pillow --quiet
+          /tmp/iconvenv/bin/python scripts/generate-icon.py
 
       - name: Package with electron-builder (Windows)
         if: matrix.platform == 'windows'
