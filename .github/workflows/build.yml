@@ -37,8 +37,23 @@ jobs:
       - name: Generate 512x512 icon for macOS
         if: matrix.platform == 'mac'
         run: |
-          sips -z 512 512 public/favicon.ico --out public/icon-512.png || \
-          convert public/favicon.ico[0] -resize 512x512 public/icon-512.png
+          pip3 install Pillow --quiet
+          python3 - <<'EOF'
+from PIL import Image
+img = Image.open('public/favicon.ico')
+# Pick the largest frame in the ICO file
+frames = []
+try:
+    while True:
+        frames.append(img.copy().convert('RGBA'))
+        img.seek(img.tell() + 1)
+except EOFError:
+    pass
+best = max(frames, key=lambda f: f.size[0]) if frames else img.convert('RGBA')
+best = best.resize((512, 512), Image.LANCZOS)
+best.save('public/icon-512.png', 'PNG')
+print('icon-512.png generated successfully')
+EOF
 
       - name: Package with electron-builder (Windows)
         if: matrix.platform == 'windows'
