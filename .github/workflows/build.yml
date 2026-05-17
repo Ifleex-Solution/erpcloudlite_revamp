@@ -34,6 +34,12 @@ jobs:
       - name: Build Angular app
         run: npx ng build --base-href ./
 
+      - name: Generate 512x512 icon for macOS
+        if: matrix.platform == 'mac'
+        run: |
+          sips -z 512 512 public/favicon.ico --out public/icon-512.png || \
+          convert public/favicon.ico[0] -resize 512x512 public/icon-512.png
+
       - name: Package with electron-builder (Windows)
         if: matrix.platform == 'windows'
         run: npx electron-builder --win

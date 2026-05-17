@@ -76,7 +76,7 @@
     },
     "mac": {
       "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
-      "icon": "public/favicon.ico",
+      "icon": "public/icon-512.png",
       "category": "public.app-category.business"
     }
   }
