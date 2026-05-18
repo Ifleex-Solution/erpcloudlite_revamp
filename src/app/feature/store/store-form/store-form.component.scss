@@ -13,9 +13,9 @@
   font-size: 13.5px;
   color: #64748b;
 
-  .bc-icon { font-size: 18px; width: 18px; height: 18px; color: #6366f1; }
+  .bc-icon { font-size: 18px; width: 18px; height: 18px; color: var(--mat-sys-primary); }
   .bc-sep  { font-size: 16px; width: 16px; height: 16px; }
-  .bc-link { cursor: pointer; color: #6366f1; font-weight: 500; &:hover { text-decoration: underline; } }
+  .bc-link { cursor: pointer; color: var(--mat-sys-primary); font-weight: 500; &:hover { text-decoration: underline; } }
   .bc-current { color: #1e293b; font-weight: 600; }
 }
 
@@ -39,7 +39,7 @@
   align-items: center;
   gap: 16px;
   padding: 24px 28px;
-  background: linear-gradient(135deg, #1e2a3a 0%, #283593 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--mat-sys-primary) 60%, #000) 0%, var(--mat-sys-primary) 100%);
   color: #fff;
 
   .header-icon {
@@ -86,7 +86,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #6366f1;
+  color: var(--mat-sys-primary);
   margin-bottom: 16px;
   margin-top: 8px;
 
@@ -154,8 +154,8 @@
   border-radius: 8px !important;
   height: 42px;
   padding: 0 24px !important;
-  background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
-  color: #fff !important;
+  background: var(--mat-sys-primary) !important;
+  color: var(--mat-sys-on-primary) !important;
   display: flex;
   align-items: center;
   gap: 6px;

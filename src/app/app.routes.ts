@@ -11,6 +11,11 @@ export const routes: Routes = [
         path: 'store',
         loadChildren: () =>
           import('./feature/store/store.routes').then(m => m.storeRoutes)
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./feature/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
   }

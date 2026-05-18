@@ -1,15 +1,20 @@
-<div class="page-header">
-  <div class="page-title">
-    <mat-icon class="title-icon">store</mat-icon>
-    <h2>Store List</h2>
-  </div>
-  <button mat-flat-button color="primary" (click)="addStore()">
-    <mat-icon>add</mat-icon>
-    Add Store
-  </button>
-</div>
-
 <mat-card class="page-card">
+
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>storefront</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">Store List</div>
+      <div class="header-subtitle">Manage and view all your stores</div>
+    </div>
+    <span class="header-spacer"></span>
+    <button mat-flat-button class="add-btn" (click)="addStore()">
+      <mat-icon>add</mat-icon>
+      Add Store
+    </button>
+  </div>
+
   <mat-card-content>
 
     <!-- Search bar -->

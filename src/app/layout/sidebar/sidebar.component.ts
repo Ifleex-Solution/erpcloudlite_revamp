@@ -50,6 +50,7 @@ export class SidebarComponent {
         { label: 'Service List', route: '/service/list' },
       ]
     },
+    { label: 'Settings', icon: 'settings', route: '/settings' },
   ];
 
   toggle(item: NavItem): void {

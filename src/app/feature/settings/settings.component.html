@@ -1,0 +1,38 @@
+<div class="settings-page">
+
+  <div class="settings-header">
+    <h2 class="settings-title">Settings</h2>
+    <p class="settings-subtitle">Customize your application appearance</p>
+  </div>
+
+  <mat-card class="settings-card">
+    <mat-card-header>
+      <div mat-card-avatar class="card-avatar">
+        <mat-icon>palette</mat-icon>
+      </div>
+      <mat-card-title>Theme Color</mat-card-title>
+      <mat-card-subtitle>Choose a primary color for the application</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="theme-grid">
+        @for (theme of themeService.themes; track theme.id) {
+          <button
+            class="theme-swatch"
+            [class.selected]="themeService.currentTheme() === theme.id"
+            (click)="selectTheme(theme.id)"
+            [attr.aria-label]="'Select ' + theme.label + ' theme'"
+          >
+            <span class="swatch-circle" [style.background]="theme.primary">
+              @if (themeService.currentTheme() === theme.id) {
+                <mat-icon class="check-icon">check</mat-icon>
+              }
+            </span>
+            <span class="swatch-label">{{ theme.label }}</span>
+          </button>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>

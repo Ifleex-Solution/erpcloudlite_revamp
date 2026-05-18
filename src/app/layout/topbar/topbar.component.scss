@@ -1,6 +1,6 @@
 .topbar {
-  background: #283593;
-  color: #fff;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -18,6 +18,6 @@
   }
 
   button {
-    color: #fff;
+    color: var(--mat-sys-on-primary);
   }
 }

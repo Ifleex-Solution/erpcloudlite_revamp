@@ -9,6 +9,32 @@ html {
     typography: Roboto,
     density: 0,
   ));
+  --sidebar-accent: #60a5fa;
+}
+
+html.theme-azure {
+  @include mat.theme((color: (theme-type: light, primary: mat.$azure-palette)));
+  --sidebar-accent: #60a5fa;
+}
+
+html.theme-violet {
+  @include mat.theme((color: (theme-type: light, primary: mat.$violet-palette)));
+  --sidebar-accent: #a78bfa;
+}
+
+html.theme-rose {
+  @include mat.theme((color: (theme-type: light, primary: mat.$rose-palette)));
+  --sidebar-accent: #fb7185;
+}
+
+html.theme-green {
+  @include mat.theme((color: (theme-type: light, primary: mat.$green-palette)));
+  --sidebar-accent: #4ade80;
+}
+
+html.theme-orange {
+  @include mat.theme((color: (theme-type: light, primary: mat.$orange-palette)));
+  --sidebar-accent: #fb923c;
 }
 
 *,

@@ -18,7 +18,7 @@
     font-size: 26px;
     width: 26px;
     height: 26px;
-    color: #a78bfa;
+    color: var(--sidebar-accent);
   }
 
   .brand-name {
@@ -48,13 +48,13 @@ mat-divider {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #a78bfa;
+    border: 2px solid var(--sidebar-accent);
 
     mat-icon {
       font-size: 30px;
       width: 30px;
       height: 30px;
-      color: #a78bfa;
+      color: var(--sidebar-accent);
     }
   }
 
@@ -132,28 +132,28 @@ mat-divider {
     background: rgba(255,255,255,0.08);
     color: #fff;
 
-    .nav-icon { color: #a78bfa; }
+    .nav-icon { color: var(--sidebar-accent); }
   }
 
   &.active-link {
-    background: rgba(167,139,250,0.2);
+    background: color-mix(in srgb, var(--sidebar-accent) 20%, transparent);
     color: #fff;
 
-    .nav-icon { color: #a78bfa; }
+    .nav-icon { color: var(--sidebar-accent); }
   }
 
   &.expanded {
     background: rgba(255,255,255,0.08);
     color: #fff;
 
-    .nav-icon { color: #a78bfa; }
+    .nav-icon { color: var(--sidebar-accent); }
   }
 }
 
 /* Sub-menu */
 .sub-menu {
   margin: 0 8px 4px 8px;
-  border-left: 2px solid rgba(167,139,250,0.3);
+  border-left: 2px solid color-mix(in srgb, var(--sidebar-accent) 30%, transparent);
   margin-left: 28px;
 }
 
@@ -180,9 +180,9 @@ mat-divider {
   }
 
   &.active-child {
-    color: #a78bfa;
+    color: var(--sidebar-accent);
     font-weight: 600;
 
-    .sub-dash { color: #a78bfa; }
+    .sub-dash { color: var(--sidebar-accent); }
   }
 }
