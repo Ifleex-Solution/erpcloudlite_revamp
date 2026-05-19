@@ -1,0 +1,107 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">account_tree</mat-icon>
+    <span class="bc-link" (click)="goBack()">Branch</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Branch' : 'Add Branch' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Back to List
+  </button>
+</div>
+
+<!-- Form Card -->
+<div class="form-card">
+
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit' : 'add_business' }}</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Branch' : 'Add Branch' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update branch information below' : 'Fill in the details to create a new branch' }}</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading branch data...</p>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- Section: Basic Info -->
+      <div class="section-label">
+        <mat-icon>info</mat-icon> Basic Information
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Branch Code</mat-label>
+          <mat-icon matPrefix class="field-prefix">qr_code</mat-icon>
+          <input matInput formControlName="code" placeholder="e.g. 000001">
+          @if (f['code'].hasError('required') && f['code'].touched) {
+            <mat-error>Branch code is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Branch Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">account_tree</mat-icon>
+          <input matInput formControlName="name" placeholder="Enter branch name">
+          @if (f['name'].hasError('required') && f['name'].touched) {
+            <mat-error>Branch name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Branch Nature</mat-label>
+          <mat-icon matPrefix class="field-prefix">category</mat-icon>
+          <mat-select formControlName="nature">
+            <mat-option value="Retail">🏪 Retail</mat-option>
+            <mat-option value="Wholesale">🏭 Wholesale</mat-option>
+          </mat-select>
+          @if (f['nature'].hasError('required') && f['nature'].touched) {
+            <mat-error>Branch nature is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">✅ Active</mat-option>
+            <mat-option [value]="0">❌ Inactive</mat-option>
+          </mat-select>
+          @if (f['status'].hasError('required') && f['status'].touched) {
+            <mat-error>Status is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <ng-container>
+              <mat-icon>{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
+              <span>{{ isEdit ? 'Update Branch' : 'Save Branch' }}</span>
+            </ng-container>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>
