@@ -1,0 +1,340 @@
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">inventory_2</mat-icon>
+    <span class="bc-link" (click)="goBack()">Product</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Product' : 'Add Product' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back to List</button>
+</div>
+
+<div class="form-card">
+  <div class="card-header">
+    <div class="header-icon"><mat-icon>{{ isEdit ? 'edit' : 'inventory_2' }}</mat-icon></div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Product' : 'Add Product' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update product information' : 'Fill in the details to create a new product' }}</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay"><mat-spinner diameter="44"></mat-spinner><p>Loading product data...</p></div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- ── Basic Information ───────────────────────────────────────────── -->
+      <div class="section-label"><mat-icon>info</mat-icon> Basic Information</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product Code</mat-label>
+          <mat-icon matPrefix class="field-prefix">qr_code</mat-icon>
+          <input matInput formControlName="code" placeholder="Auto-generated" [readonly]="isEdit">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">inventory_2</mat-icon>
+          <input matInput formControlName="name" placeholder="Enter product name">
+          @if (f['name'].hasError('required') && f['name'].touched) { <mat-error>Product name is required</mat-error> }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Category</mat-label>
+          <mat-icon matPrefix class="field-prefix">category</mat-icon>
+          <mat-select formControlName="category_id">
+            @for (c of categories; track c.id) { <mat-option [value]="c.id">{{ c.name }}</mat-option> }
+          </mat-select>
+          @if (f['category_id'].hasError('required') && f['category_id'].touched) { <mat-error>Category is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Subcategory</mat-label>
+          <mat-icon matPrefix class="field-prefix">account_tree</mat-icon>
+          <mat-select formControlName="subcategory_id">
+            <mat-option value="">— None —</mat-option>
+            @for (s of subcategories; track s.id) { <mat-option [value]="s.id">{{ s.name }}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- ── Classification ─────────────────────────────────────────────── -->
+      <div class="section-label"><mat-icon>tune</mat-icon> Classification</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product Type</mat-label>
+          <mat-icon matPrefix class="field-prefix">sell</mat-icon>
+          <mat-select formControlName="product_type">
+            @for (t of productTypes; track t) { <mat-option [value]="t">{{ t }}</mat-option> }
+          </mat-select>
+          @if (f['product_type'].hasError('required') && f['product_type'].touched) { <mat-error>Product type is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Brand</mat-label>
+          <mat-icon matPrefix class="field-prefix">branding_watermark</mat-icon>
+          <mat-select formControlName="brand_id">
+            <mat-option value="">— None —</mat-option>
+            @for (b of brands; track b.id) { <mat-option [value]="b.id">{{ b.name }}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Origin Of Product</mat-label>
+          <mat-icon matPrefix class="field-prefix">public</mat-icon>
+          <mat-select formControlName="oop_id">
+            <mat-option value="">— None —</mat-option>
+            @for (o of oops; track o.id) { <mat-option [value]="o.id">{{ o.name }}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Serial No</mat-label>
+          <mat-icon matPrefix class="field-prefix">tag</mat-icon>
+          <input matInput formControlName="serial_no" placeholder="Serial number">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product Model</mat-label>
+          <mat-icon matPrefix class="field-prefix">model_training</mat-icon>
+          <input matInput formControlName="product_model" placeholder="Model name">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Print Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">label</mat-icon>
+          <input matInput formControlName="printname" placeholder="Label print name">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="0">Inactive</mat-option>
+          </mat-select>
+          @if (f['status'].hasError('required') && f['status'].touched) { <mat-error>Status is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product Details</mat-label>
+          <mat-icon matPrefix class="field-prefix">description</mat-icon>
+          <textarea matInput formControlName="product_details" rows="1" placeholder="Product description..."></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- ── Store & Pricing ────────────────────────────────────────────── -->
+      <div class="section-label"><mat-icon>storefront</mat-icon> Store & Pricing</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Store</mat-label>
+          <mat-icon matPrefix class="field-prefix">store</mat-icon>
+          <mat-select formControlName="store">
+            @for (s of stores; track s.id) { <mat-option [value]="s.id">{{ s.name }}</mat-option> }
+          </mat-select>
+          @if (f['store'].hasError('required') && f['store'].touched) { <mat-error>Store is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Default Sale Price</mat-label>
+          <mat-icon matPrefix class="field-prefix">payments</mat-icon>
+          <mat-select formControlName="defaultsaleprice">
+            <mat-option value="fixed_price">Fixed Price</mat-option>
+            <mat-option value="mrp">MRP</mat-option>
+            <mat-option value="custom">Custom</mat-option>
+          </mat-select>
+          @if (f['defaultsaleprice'].hasError('required') && f['defaultsaleprice'].touched) { <mat-error>Default sale price is required</mat-error> }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Batch Type</mat-label>
+          <mat-icon matPrefix class="field-prefix">layers</mat-icon>
+          <mat-select formControlName="batchtype">
+            <mat-option [value]="0">Single</mat-option>
+            <mat-option [value]="1">Multiple</mat-option>
+          </mat-select>
+          @if (f['batchtype'].hasError('required') && f['batchtype'].touched) { <mat-error>Batch type is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Product VAT (%)</mat-label>
+          <mat-icon matPrefix class="field-prefix">percent</mat-icon>
+          <input matInput type="number" formControlName="product_vat" placeholder="0.00" min="0">
+        </mat-form-field>
+      </div>
+
+      <!-- ── Master Stock & Substock ─────────────────────────────────────── -->
+      <div class="section-label"><mat-icon>inventory</mat-icon> Master Stock & Sub Stock</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Master Stock Unit</mat-label>
+          <mat-icon matPrefix class="field-prefix">straighten</mat-icon>
+          <mat-select formControlName="unit_id">
+            @for (u of units; track u.id) { <mat-option [value]="u.id">{{ u.name }}</mat-option> }
+          </mat-select>
+          @if (f['unit_id'].hasError('required') && f['unit_id'].touched) { <mat-error>Unit is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Cost Price</mat-label>
+          <mat-icon matPrefix class="field-prefix">price_change</mat-icon>
+          <input matInput type="number" formControlName="cost_price" placeholder="0.00" min="0">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Sell Price</mat-label>
+          <mat-icon matPrefix class="field-prefix">sell</mat-icon>
+          <input matInput type="number" formControlName="price" placeholder="0.00" min="0">
+        </mat-form-field>
+        <div class="field"></div>
+      </div>
+
+      <!-- Substock panel -->
+      <div class="substock-section">
+        <div class="substock-header">
+          <span class="substock-title"><mat-icon>layers</mat-icon> Sub Stock Units</span>
+          <button mat-stroked-button type="button" class="add-substock-btn" (click)="showAddPanel = !showAddPanel; addUnitId = ''; addSubcostPrice = ''; addSubsellPrice = ''">
+            <mat-icon>{{ showAddPanel ? 'close' : 'add' }}</mat-icon>
+            {{ showAddPanel ? 'Cancel' : 'Add Substock' }}
+          </button>
+        </div>
+
+        @if (showAddPanel) {
+          <div class="add-panel">
+            <mat-form-field appearance="outline" class="panel-field">
+              <mat-label>Substock Unit</mat-label>
+              <mat-select [(ngModel)]="addUnitId" [ngModelOptions]="{standalone: true}">
+                @for (u of units; track u.id) { <mat-option [value]="u.id">{{ u.name }}</mat-option> }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="panel-field">
+              <mat-label>Sub Cost Price</mat-label>
+              <input matInput type="number" [(ngModel)]="addSubcostPrice" [ngModelOptions]="{standalone: true}" placeholder="0.00" min="0">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="panel-field">
+              <mat-label>Sub Sale Price</mat-label>
+              <input matInput type="number" [(ngModel)]="addSubsellPrice" [ngModelOptions]="{standalone: true}" placeholder="0.00" min="0">
+            </mat-form-field>
+            <button mat-flat-button type="button" class="panel-add-btn" (click)="addSubstock()">
+              <mat-icon>check</mat-icon> Add
+            </button>
+          </div>
+        }
+
+        @if (entries.length > 0) {
+          <div class="substock-table-wrap">
+            <table class="substock-table">
+              <thead>
+                <tr>
+                  <th>Unit</th>
+                  <th>Cost Price</th>
+                  <th>Sale Price</th>
+                  <th class="col-center">Primary</th>
+                  <th class="col-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (entry of entries; track entry.subunitid; let i = $index) {
+                  <tr [class.editing-row]="editingIndex === i">
+                    <td class="unit-cell">{{ entry.subunit }}</td>
+                    <td>
+                      @if (editingIndex === i) {
+                        <input class="inline-input" type="number" [(ngModel)]="entry.subcost_price" [ngModelOptions]="{standalone: true}" placeholder="0.00">
+                      } @else {
+                        {{ entry.subcost_price }}
+                      }
+                    </td>
+                    <td>
+                      @if (editingIndex === i) {
+                        <input class="inline-input" type="number" [(ngModel)]="entry.subsell_price" [ngModelOptions]="{standalone: true}" placeholder="0.00">
+                      } @else {
+                        {{ entry.subsell_price }}
+                      }
+                    </td>
+                    <td class="col-center">
+                      <mat-checkbox [checked]="entry.selected" (change)="togglePrimary(i)" color="primary" matTooltip="Set as primary unit"></mat-checkbox>
+                    </td>
+                    <td class="col-center">
+                      @if (editingIndex === i) {
+                        <button mat-icon-button type="button" class="done-btn" matTooltip="Done editing" (click)="finishEdit()">
+                          <mat-icon>check_circle</mat-icon>
+                        </button>
+                      } @else {
+                        <button mat-icon-button type="button" class="edit-btn" matTooltip="Edit prices" (click)="startEdit(i)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                      }
+                      <button mat-icon-button type="button" class="delete-btn" matTooltip="Remove" (click)="removeSubstock(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="substock-empty">No sub stock units added yet</div>
+        }
+      </div>
+
+      <!-- ── Stock Level & Supply ────────────────────────────────────────── -->
+      <div class="section-label"><mat-icon>warehouse</mat-icon> Stock Level & Supply</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Supplier</mat-label>
+          <mat-icon matPrefix class="field-prefix">local_shipping</mat-icon>
+          <mat-select formControlName="supplier_id">
+            <mat-option value="">— None —</mat-option>
+            @for (s of suppliers; track s.id) { <mat-option [value]="s.id">{{ s.name }}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Enable Stock</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="stock">
+            <mat-option [value]="1">Yes — Track inventory</mat-option>
+            <mat-option [value]="0">No — Skip tracking</mat-option>
+          </mat-select>
+          @if (f['stock'].hasError('required') && f['stock'].touched) { <mat-error>Stock setting is required</mat-error> }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Max Stock Level</mat-label>
+          <mat-icon matPrefix class="field-prefix">arrow_upward</mat-icon>
+          <input matInput type="number" formControlName="max_stock_level" placeholder="0" min="0">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Min Stock Level</mat-label>
+          <mat-icon matPrefix class="field-prefix">arrow_downward</mat-icon>
+          <input matInput type="number" formControlName="min_stock_level" placeholder="0" min="0">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Reorder Stock Level</mat-label>
+          <mat-icon matPrefix class="field-prefix">refresh</mat-icon>
+          <input matInput type="number" formControlName="reorder_stock_level" placeholder="0" min="0">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Reserve Stock Level</mat-label>
+          <mat-icon matPrefix class="field-prefix">lock</mat-icon>
+          <input matInput type="number" formControlName="reserve_stock_level" placeholder="0" min="0">
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn"><mat-icon>close</mat-icon> Cancel</button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) { <mat-spinner diameter="20" class="btn-spinner"></mat-spinner><span>Saving...</span> }
+          @else { <ng-container><mat-icon>{{ isEdit ? 'save' : 'add_circle' }}</mat-icon><span>{{ isEdit ? 'Update Product' : 'Save Product' }}</span></ng-container> }
+        </button>
+      </div>
+    </form>
+  }
+</div>

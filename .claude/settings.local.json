@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng *)",
+      "Read(//c/xampp/htdocs/erpcloudlite-backend/**)",
+      "Bash(php artisan *)",
+      "Bash(Get-Content \"C:\\\\xampp\\\\htdocs\\\\erpcloudlite-backend\\\\storage\\\\logs\\\\laravel.log\" -Tail 30)",
+      "Read(//c/xampp/htdocs/erpcloudlite2/application/modules/store/**)",
+      "Read(//c/xampp/htdocs/erpcloudlite2/application/modules/**)",
+      "Bash(find \"C:/xampp/htdocs/erpcloudlite2/application\" -name \"*Branch*\" -o -name \"*branch_model*\" -o -name \"*BranchApi*\" 2>&1)",
+      "Read(//c/xampp/htdocs/erpcloudlite2/application/**)",
+      "Bash(xargs grep -l \"branch\")",
+      "Bash(xargs grep -l \"branch_form\\\\|checkbranchList\\\\|getbranchById\\\\|add_branch\")",
+      "Bash(mkdir -p \"C:/xampp/htdocs/erpcloudlite-backend/.vscode\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\erpcloudlite2\\\\application\\\\modules\\\\product\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\app\\\\layout\" -Recurse -Force | ForEach-Object { $_.FullName })",
+      "Read(//c/xampp/mysql/data/**)",
+      "PowerShell(cmd /c \"dir C:\\\\xampp\\\\mysql\\\\data /a /b\" 2>&1)",
+      "PowerShell(cmd /c \"type C:\\\\xampp\\\\mysql\\\\data\\\\mysql_error.log\" 2>&1)",
+      "PowerShell(netstat -ano)",
+      "Read(//c/xampp/mysql/bin/**)",
+      "PowerShell(Stop-Process -Name \"mysqld\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(Get-ChildItem -Recurse -Filter \"*.php\")",
+      "Bash(Select-String -Pattern \"varbinary|AES_ENCRYPT|AES_DECRYPT|encrypt|decrypt\" -List)",
+      "Bash(Select-Object Path)",
+      "Bash(Format-List)",
+      "Read(//c/xampp/htdocs/erpcloudlite2/**)"
+    ],
+    "additionalDirectories": [
+      "C:\\xampp\\htdocs\\erpcloudlite-backend\\config",
+      "C:\\xampp\\htdocs\\erpcloudlite-backend"
+    ]
+  }
+}

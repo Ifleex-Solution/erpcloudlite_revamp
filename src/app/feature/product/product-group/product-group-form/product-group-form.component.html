@@ -1,0 +1,65 @@
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">folder_special</mat-icon>
+    <span class="bc-link" (click)="goBack()">Product Group</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Group' : 'Add Group' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back to List</button>
+</div>
+<div class="form-card">
+  <div class="card-header">
+    <div class="header-icon"><mat-icon>{{ isEdit ? 'edit' : 'folder_special' }}</mat-icon></div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Product Group' : 'Add Product Group' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update group information' : 'Create a new product group' }}</div>
+    </div>
+  </div>
+  @if (loading) {
+    <div class="loading-overlay"><mat-spinner diameter="44"></mat-spinner><p>Loading...</p></div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+      <div class="section-label"><mat-icon>info</mat-icon> Basic Information</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Group Code</mat-label>
+          <mat-icon matPrefix class="field-prefix">qr_code</mat-icon>
+          <input matInput formControlName="code" placeholder="Auto-generated" [readonly]="isEdit">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Group Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">folder_special</mat-icon>
+          <input matInput formControlName="name" placeholder="Enter group name">
+          @if (f['name'].hasError('required') && f['name'].touched) { <mat-error>Group name is required</mat-error> }
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Invoice Grouping</mat-label>
+          <mat-icon matPrefix class="field-prefix">receipt</mat-icon>
+          <mat-select formControlName="invoice_group">
+            <mat-option [value]="1">✅ Enabled</mat-option>
+            <mat-option [value]="0">❌ Disabled</mat-option>
+          </mat-select>
+          @if (f['invoice_group'].hasError('required') && f['invoice_group'].touched) { <mat-error>Invoice grouping is required</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">✅ Active</mat-option>
+            <mat-option [value]="0">❌ Inactive</mat-option>
+          </mat-select>
+          @if (f['status'].hasError('required') && f['status'].touched) { <mat-error>Status is required</mat-error> }
+        </mat-form-field>
+      </div>
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn"><mat-icon>close</mat-icon> Cancel</button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) { <mat-spinner diameter="20" class="btn-spinner"></mat-spinner><span>Saving...</span> }
+          @else { <ng-container><mat-icon>{{ isEdit ? 'save' : 'add_circle' }}</mat-icon><span>{{ isEdit ? 'Update Group' : 'Save Group' }}</span></ng-container> }
+        </button>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,96 @@
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">label</mat-icon>
+    <span class="bc-current">Label Print</span>
+  </div>
+</div>
+
+<div class="label-layout">
+  <!-- Left: Product Selector -->
+  <mat-card class="selector-card">
+    <div class="card-header">
+      <div class="header-icon"><mat-icon>inventory_2</mat-icon></div>
+      <div>
+        <div class="header-title">Select Products</div>
+        <div class="header-subtitle">Search and add products for label printing</div>
+      </div>
+    </div>
+
+    <div class="selector-body">
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Product</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="searchProduct" (ngModelChange)="filterProducts()" placeholder="Search by name...">
+        </mat-form-field>
+      </div>
+
+      @if (loading) {
+        <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else {
+        <div class="product-list">
+          @for (p of filteredProducts; track p.id) {
+            <div class="product-item" (click)="addToLabels(p)">
+              <mat-icon class="prod-icon">inventory_2</mat-icon>
+              <div class="prod-info">
+                <span class="prod-name">{{ p.name }}</span>
+                <span class="prod-code">{{ p.code }}</span>
+              </div>
+              <mat-icon class="add-icon">add_circle</mat-icon>
+            </div>
+          }
+          @if (filteredProducts.length === 0) {
+            <div class="no-results"><mat-icon>search_off</mat-icon><p>No products found</p></div>
+          }
+        </div>
+      }
+    </div>
+  </mat-card>
+
+  <!-- Right: Label Queue -->
+  <mat-card class="queue-card">
+    <div class="card-header">
+      <div class="header-icon"><mat-icon>label</mat-icon></div>
+      <div>
+        <div class="header-title">Label Queue</div>
+        <div class="header-subtitle">Set quantities and print</div>
+      </div>
+    </div>
+
+    <div class="queue-body">
+      @if (labelItems.length === 0) {
+        <div class="empty-queue">
+          <mat-icon>print_disabled</mat-icon>
+          <p>No products added yet</p>
+          <span>Click products on the left to add them</span>
+        </div>
+      } @else {
+        <div class="label-items">
+          @for (item of labelItems; track item.id) {
+            <div class="label-item">
+              <div class="item-info">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-code">{{ item.code }}</span>
+              </div>
+              <div class="item-controls">
+                <mat-form-field appearance="outline" class="qty-field">
+                  <mat-label>Qty</mat-label>
+                  <input matInput type="number" [(ngModel)]="item.qty" min="1" max="999">
+                </mat-form-field>
+                <button mat-icon-button color="warn" (click)="removeLabel(item)" title="Remove">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="print-actions">
+          <button mat-flat-button class="print-btn" (click)="print()">
+            <mat-icon>print</mat-icon> Print Labels
+          </button>
+        </div>
+      }
+    </div>
+  </mat-card>
+</div>

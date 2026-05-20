@@ -41,8 +41,15 @@ export class SidebarComponent {
       ]
     },
     { label: 'Product', icon: 'inventory_2', children: [
-        { label: 'Add Product',  route: '/product/add' },
-        { label: 'Product List', route: '/product/list' },
+        { label: 'Brand',             route: '/product/brand/list' },
+        { label: 'Origin Of Product', route: '/product/oop/list' },
+        { label: 'Category',          route: '/product/category/list' },
+        { label: 'Subcategory',       route: '/product/subcategory/list' },
+        { label: 'Unit',              route: '/product/unit/list' },
+        { label: 'Product',           route: '/product/product-info/list' },
+        { label: 'Product Group',     route: '/product/productgroup/list' },
+        { label: 'Conversion Ratio',  route: '/product/conversionratio/list' },
+        { label: 'Label Print',       route: '/product/labelprint' },
       ]
     },
     { label: 'Service', icon: 'build', children: [

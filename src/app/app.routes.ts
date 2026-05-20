@@ -18,6 +18,11 @@ export const routes: Routes = [
           import('./feature/store/store.routes').then(m => m.storeRoutes)
       },
       {
+        path: 'product',
+        loadChildren: () =>
+          import('./feature/product/product.routes').then(m => m.productRoutes)
+      },
+      {
         path: 'settings',
         loadComponent: () =>
           import('./feature/settings/settings.component').then(m => m.SettingsComponent)

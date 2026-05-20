@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://fextensolutions.com/erpcloudlite-backend/public/'
+  apiUrl: 'https://fextensolutions.com/backend/public/'
 };
