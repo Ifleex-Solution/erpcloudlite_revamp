@@ -26,11 +26,27 @@
       "Bash(Select-String -Pattern \"varbinary|AES_ENCRYPT|AES_DECRYPT|encrypt|decrypt\" -List)",
       "Bash(Select-Object Path)",
       "Bash(Format-List)",
-      "Read(//c/xampp/htdocs/erpcloudlite2/**)"
+      "Read(//c/xampp/htdocs/erpcloudlite2/**)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"DESCRIBE user_login;\" betalite 2>&1)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SELECT id, username, LEFT\\(password,10\\) as pwd_preview, user_type, status FROM user_login LIMIT 3;\" betalite 2>&1)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SELECT LENGTH\\(password\\), password FROM user_login LIMIT 1;\" betalite 2>&1)",
+      "Bash(cp \"C:/xampp/htdocs/erpcloudlite2/assets/images/login-background.jpeg\" \"f:/Angular Projects/erpcloudlite-revamp/src/assets/images/\")",
+      "Bash(cp \"C:/xampp/htdocs/erpcloudlite2/assets/images/Black Logo.png\" \"f:/Angular Projects/erpcloudlite-revamp/src/assets/images/\")",
+      "Bash(cp \"C:/xampp/htdocs/erpcloudlite2/assets/images/login-background.jpeg\" \"f:/Angular Projects/erpcloudlite-revamp/public/images/\")",
+      "Bash(cp \"C:/xampp/htdocs/erpcloudlite2/assets/images/Black Logo.png\" \"f:/Angular Projects/erpcloudlite-revamp/public/images/\")",
+      "Bash(./mysql.exe -u root betalite -e \"ALTER TABLE user_login ADD COLUMN IF NOT EXISTS encrypted_password VARBINARY\\(255\\) NOT NULL DEFAULT '';\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\erpcloudlite2\\\\application\\\\modules\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(node -e ' *)",
+      "Bash(./mysql.exe -u root betalite -e ' *)",
+      "Bash(\"C:/xampp/mysql/bin/mysql.exe\" -u root betalite -e \"ALTER TABLE company_information ADD COLUMN IF NOT EXISTS theme_color VARCHAR\\(50\\) NOT NULL DEFAULT 'theme-azure', ADD COLUMN IF NOT EXISTS theme_dark TINYINT\\(1\\) NOT NULL DEFAULT 0;\")",
+      "Bash(dir \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\app\\\\feature\\\\store\" /b /s)"
     ],
     "additionalDirectories": [
       "C:\\xampp\\htdocs\\erpcloudlite-backend\\config",
-      "C:\\xampp\\htdocs\\erpcloudlite-backend"
+      "C:\\xampp\\htdocs\\erpcloudlite-backend",
+      "C:\\xampp\\htdocs\\erpcloudlite2\\application\\modules\\dashboard\\controllers",
+      "C:\\xampp\\htdocs\\erpcloudlite2\\application\\modules\\dashboard\\models"
     ]
   }
 }

@@ -1,0 +1,115 @@
+<!-- Breadcrumb -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">admin_panel_settings</mat-icon>
+    <span class="bc-link" (click)="goBack()">Roles</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Role' : 'Add Role' }}</span>
+  </div>
+</div>
+
+<div class="form-card">
+
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit' : 'shield' }}</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Role' : 'Add Role' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update role name and permissions' : 'Define a role and set module permissions' }}</div>
+    </div>
+    <span class="header-spacer"></span>
+    <button mat-stroked-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Back to List
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading...</p>
+    </div>
+  } @else {
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- Role Name -->
+      <div class="role-name-row">
+        <mat-form-field appearance="outline" class="role-name-field">
+          <mat-label>Role Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">badge</mat-icon>
+          <input matInput formControlName="role_name" placeholder="e.g. Admin, Sales Manager">
+          @if (form.get('role_name')!.hasError('required') && form.get('role_name')!.touched) {
+            <mat-error>Role name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Permission Tables -->
+      @for (mod of modules; track mod.id) {
+        <div class="module-section">
+          <div class="module-title">
+            <mat-icon>folder_open</mat-icon>
+            {{ label(mod.name) }}
+          </div>
+
+          <div class="table-wrap">
+            <table class="perm-table">
+              <thead>
+                <tr>
+                  <th class="sl-col">#</th>
+                  <th class="name-col">Menu / Screen</th>
+                  @for (action of actions; track action) {
+                    <th class="perm-col">
+                      <div class="perm-header">
+                        <mat-checkbox
+                          [checked]="isAllChecked(mod, action)"
+                          [indeterminate]="isSomeChecked(mod, action)"
+                          (change)="checkAll(mod, action, $event.checked)">
+                        </mat-checkbox>
+                        <span>{{ label(action) }}</span>
+                      </div>
+                    </th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (sub of mod.sub_modules; track sub.id; let i = $index) {
+                  <tr>
+                    <td class="sl-col">{{ i + 1 }}</td>
+                    <td class="name-col">{{ label(sub.name) }}</td>
+                    @for (action of actions; track action) {
+                      <td class="perm-col">
+                        <mat-checkbox
+                          [checked]="permissions[sub.id][action]"
+                          (change)="permissions[sub.id][action] = $event.checked">
+                        </mat-checkbox>
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <mat-icon>{{ isEdit ? 'save' : 'shield' }}</mat-icon>
+            <span>{{ isEdit ? 'Update Role' : 'Save Role' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>

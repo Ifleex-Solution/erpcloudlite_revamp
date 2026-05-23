@@ -1,0 +1,78 @@
+<!-- Background -->
+<div class="login-bg"></div>
+
+<!-- Top-right Logo -->
+<div class="site-logo">
+  <img src="images/Black Logo.png" alt="ERP Cloud Lite" />
+</div>
+
+<!-- Bottom Tagline -->
+<p class="page-tagline">Simple &nbsp;&middot;&nbsp; Smart &nbsp;&middot;&nbsp; Secure</p>
+
+<!-- Instance Badge -->
+<div class="instance-pill instance-beta">
+  <span class="dot"></span>
+  BETA
+</div>
+
+<!-- Login Stage -->
+<div class="login-stage">
+  <div class="login-card">
+
+    <!-- Card Header -->
+    <div class="card-header-area">
+      <div class="greeting">
+        Hello,
+        <strong>Welcome!</strong>
+      </div>
+      <p class="sub-line">Everything you need to run your business<br>efficiently in one secure place.</p>
+    </div>
+
+    <div class="card-divider"></div>
+
+    <!-- Card Body -->
+    <div class="card-body-area">
+
+      @if (error) {
+        <div class="login-alert error">
+          <span>{{ error }}</span>
+          <button type="button" class="alert-close" (click)="error = ''">&times;</button>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User ID</mat-label>
+          <input matInput formControlName="username" placeholder="Enter your user ID" autocomplete="off" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (form.get('username')?.touched && form.get('username')?.hasError('required')) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password" autocomplete="off" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword" tabindex="-1">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" class="btn-signin" [disabled]="loading">
+          @if (loading) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Sign In
+          }
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</div>

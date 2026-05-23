@@ -1,0 +1,114 @@
+<!-- Breadcrumb -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">manage_accounts</mat-icon>
+    <span class="bc-link" (click)="goBack()">User Role</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Assignment' : 'Assign Role' }}</span>
+  </div>
+</div>
+
+<div class="form-card">
+
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Assignment' : 'Assign Role to User' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update assignment status' : 'Select a user and assign a role' }}</div>
+    </div>
+    <span class="header-spacer"></span>
+    <button mat-stroked-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Back to List
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading...</p>
+    </div>
+  } @else {
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <div class="section-label"><mat-icon>assignment_ind</mat-icon> Assignment Details</div>
+
+      @if (isEdit) {
+        <!-- Edit: show readonly info -->
+        <div class="form-row">
+          <div class="readonly-field">
+            <span class="readonly-label">User</span>
+            <span class="readonly-value">{{ editUser }}</span>
+          </div>
+          <div class="readonly-field">
+            <span class="readonly-label">Role</span>
+            <span class="role-badge">{{ editRole }}</span>
+          </div>
+        </div>
+      } @else {
+        <!-- Add: user + role dropdowns -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Select User</mat-label>
+            <mat-icon matPrefix class="field-prefix">person</mat-icon>
+            <mat-select formControlName="user_id">
+              <mat-option value="">— Select User —</mat-option>
+              @for (u of users; track u.user_id) {
+                <mat-option [value]="u.user_id">
+                  {{ u.fullname }} <span class="opt-sub">({{ u.username }})</span>
+                </mat-option>
+              }
+            </mat-select>
+            @if (f['user_id'].hasError('required') && f['user_id'].touched) {
+              <mat-error>User is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Select Role</mat-label>
+            <mat-icon matPrefix class="field-prefix">shield</mat-icon>
+            <mat-select formControlName="role_type">
+              <mat-option value="">— Select Role —</mat-option>
+              @for (r of roles; track r) {
+                <mat-option [value]="r">{{ r }}</mat-option>
+              }
+            </mat-select>
+            @if (f['role_type'].hasError('required') && f['role_type'].touched) {
+              <mat-error>Role is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+
+      <div class="form-row half">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="0">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <mat-icon>{{ isEdit ? 'save' : 'person_add' }}</mat-icon>
+            <span>{{ isEdit ? 'Update' : 'Assign Role' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>

@@ -37,6 +37,29 @@ html.theme-orange {
   --sidebar-accent: #fb923c;
 }
 
+html.theme-teal {
+  @include mat.theme((color: (theme-type: light, primary: mat.$cyan-palette)));
+  --sidebar-accent: #2dd4bf;
+}
+
+/* ── Dark mode ── */
+html.dark-mode {
+  @include mat.theme((color: (theme-type: dark, primary: mat.$azure-palette)));
+
+  body { background-color: #111827; color: #f9fafb; }
+
+  --sidebar-bg:      #0f172a;
+  --sidebar-text:    #e2e8f0;
+  --sidebar-border:  rgba(255,255,255,0.06);
+}
+
+html.dark-mode.theme-azure  { @include mat.theme((color: (theme-type: dark, primary: mat.$azure-palette))); }
+html.dark-mode.theme-violet { @include mat.theme((color: (theme-type: dark, primary: mat.$violet-palette))); }
+html.dark-mode.theme-rose   { @include mat.theme((color: (theme-type: dark, primary: mat.$rose-palette))); }
+html.dark-mode.theme-green  { @include mat.theme((color: (theme-type: dark, primary: mat.$green-palette))); }
+html.dark-mode.theme-orange { @include mat.theme((color: (theme-type: dark, primary: mat.$orange-palette))); }
+html.dark-mode.theme-teal   { @include mat.theme((color: (theme-type: dark, primary: mat.$cyan-palette))); }
+
 *,
 *::before,
 *::after {

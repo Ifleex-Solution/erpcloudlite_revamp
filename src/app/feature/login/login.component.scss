@@ -1,0 +1,292 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Background ── */
+.login-bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('/images/login-background.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #1a1a2e;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 20, 0.38);
+  }
+}
+
+/* ── Top-right Logo ── */
+.site-logo {
+  position: fixed;
+  top: 22px;
+  right: 28px;
+  z-index: 50;
+  width: clamp(110px, 10vw, 160px);
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 1px 6px rgba(0,0,0,0.45));
+  }
+}
+
+/* ── Bottom Tagline ── */
+.page-tagline {
+  position: fixed;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.50);
+  font-weight: 450;
+  margin: 0;
+}
+
+/* ── Instance Badge ── */
+.instance-pill {
+  position: fixed;
+  top: 26px;
+  left: 28px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px 5px 8px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.instance-beta {
+    background: rgba(99, 102, 241, 0.22);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.28);
+    .dot { background: #818cf8; box-shadow: 0 0 5px #818cf8; }
+  }
+
+  &.instance-dev {
+    background: rgba(220, 53, 69, 0.25);
+    color: #ff8a95;
+    border-color: rgba(220, 53, 69, 0.30);
+    .dot { background: #ff4d5e; box-shadow: 0 0 5px #ff4d5e; }
+  }
+
+  &.instance-prod, &.instance-live {
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+    border-color: rgba(34, 197, 94, 0.24);
+    .dot { background: #4ade80; box-shadow: 0 0 5px #4ade80; }
+  }
+}
+
+/* ── Center Stage ── */
+.login-stage {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ── Glass Card ── */
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 28px 56px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.80);
+  animation: rise 0.55s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ── Card Header ── */
+.card-header-area {
+  padding: 34px 34px 22px;
+
+  .greeting {
+    font-size: 28px;
+    font-weight: 300;
+    color: rgba(0,0,0,0.88);
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+
+    strong { font-weight: 700; display: block; }
+  }
+
+  .sub-line {
+    margin-top: 9px;
+    font-size: 14px;
+    color: rgba(0,0,0,0.50);
+    line-height: 1.65;
+    font-weight: 350;
+  }
+}
+
+.card-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.10);
+  margin: 0 34px;
+}
+
+/* ── Card Body ── */
+.card-body-area {
+  padding: 24px 34px 32px;
+}
+
+/* ── Alert ── */
+.login-alert {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  animation: slideDown 0.25s ease both;
+
+  &.error {
+    background: rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #b91c1c;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.55;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    &:hover { opacity: 1; }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Angular Material field overrides (light card context) ── */
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+
+  // Label color
+  ::ng-deep .mat-mdc-form-field-label,
+  ::ng-deep .mdc-floating-label { color: rgba(0,0,0,0.55) !important; }
+
+  // Outline border color
+  ::ng-deep .mdc-notched-outline__leading,
+  ::ng-deep .mdc-notched-outline__notch,
+  ::ng-deep .mdc-notched-outline__trailing {
+    border-color: rgba(0,0,0,0.18) !important;
+  }
+
+  // Focused outline — green to match the card theme
+  ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+  ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+  ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: #16a34a !important;
+  }
+
+  // Input text color
+  ::ng-deep .mat-mdc-input-element { color: rgba(0,0,0,0.85) !important; }
+
+  // Prefix icon — vertically centered and sized
+  ::ng-deep .mat-mdc-form-field-icon-prefix {
+    padding-right: 8px;
+    display: flex;
+    align-items: center;
+    .mat-icon {
+      color: rgba(0,0,0,0.40);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+
+  // Suffix icon (eye toggle)
+  ::ng-deep .mat-mdc-form-field-icon-suffix {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ── Sign In Button ── */
+.btn-signin {
+  width: 100%;
+  height: 44px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.6px;
+  border-radius: 8px !important;
+  transition: transform 0.15s, box-shadow 0.2s !important;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #16a34a 0%, #166534 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(22,163,74,0.35);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+
+  mat-spinner { display: inline-block; ::ng-deep circle { stroke: #fff; } }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .site-logo { width: clamp(80px, 22vw, 120px); top: 16px; right: 16px; }
+  .instance-pill { top: 14px; left: 14px; font-size: 9.5px; }
+  .login-card { max-width: 100%; border-radius: 14px; }
+  .card-header-area { padding: 26px 22px 18px; .greeting { font-size: 22px; } }
+  .card-divider { margin: 0 22px; }
+  .card-body-area { padding: 20px 22px 26px; }
+  .page-tagline { font-size: 9px; letter-spacing: 3px; bottom: 16px; }
+}
+
+@media (min-width: 1600px) {
+  .site-logo { width: 180px; }
+  .login-card { max-width: 390px; }
+}

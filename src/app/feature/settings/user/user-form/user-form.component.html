@@ -1,0 +1,171 @@
+<!-- Breadcrumb -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">manage_accounts</mat-icon>
+    <span class="bc-link" (click)="goBack()">Users</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit User' : 'Add User' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Back to List
+  </button>
+</div>
+
+<div class="form-card">
+
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit User' : 'Add User' }}</div>
+      <div class="header-subtitle">{{ isEdit ? 'Update user details below' : 'Fill in details to create a new user' }}</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading user data...</p>
+    </div>
+  } @else {
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- Personal Info -->
+      <div class="section-label"><mat-icon>person</mat-icon> Personal Information</div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>First Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">badge</mat-icon>
+          <input matInput formControlName="first_name" placeholder="First name">
+          @if (f['first_name'].hasError('required') && f['first_name'].touched) {
+            <mat-error>First name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Last Name</mat-label>
+          <mat-icon matPrefix class="field-prefix">badge</mat-icon>
+          <input matInput formControlName="last_name" placeholder="Last name">
+        </mat-form-field>
+      </div>
+
+      <!-- Login Info -->
+      <div class="section-label"><mat-icon>lock_person</mat-icon> Login Credentials</div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>User ID / Username</mat-label>
+          <mat-icon matPrefix class="field-prefix">alternate_email</mat-icon>
+          <input matInput formControlName="username" placeholder="Login username or email">
+          @if (f['username'].hasError('required') && f['username'].touched) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>{{ isEdit ? 'New Password (leave blank to keep)' : 'Password' }}</mat-label>
+          <mat-icon matPrefix class="field-prefix">key</mat-icon>
+          <input matInput formControlName="password" [type]="hidePass ? 'password' : 'text'" placeholder="Password">
+          <button mat-icon-button matSuffix type="button" (click)="hidePass = !hidePass">
+            <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (f['password'].hasError('required') && f['password'].touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- System Settings -->
+      <div class="section-label"><mat-icon>settings</mat-icon> System Settings</div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Company</mat-label>
+          <mat-icon matPrefix class="field-prefix">business</mat-icon>
+          <mat-select formControlName="user_type">
+            <mat-option value="">— Select Company —</mat-option>
+            @for (c of companies; track c.company_id) {
+              <mat-option [value]="c.company_id">{{ c.company_name }}</mat-option>
+            }
+          </mat-select>
+          @if (f['user_type'].hasError('required') && f['user_type'].touched) {
+            <mat-error>Company is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Home Page</mat-label>
+          <mat-icon matPrefix class="field-prefix">home</mat-icon>
+          <mat-select formControlName="screen">
+            @for (s of screens; track s.value) {
+              <mat-option [value]="s.value">{{ s.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row three-col">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Temporary User</mat-label>
+          <mat-icon matPrefix class="field-prefix">timer</mat-icon>
+          <mat-select formControlName="temporary">
+            <mat-option [value]="0">No</mat-option>
+            <mat-option [value]="1">Yes</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Status</mat-label>
+          <mat-icon matPrefix class="field-prefix">toggle_on</mat-icon>
+          <mat-select formControlName="status">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="0">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (f['temporary'].value === 1) {
+        <div class="section-label"><mat-icon>date_range</mat-icon> Access Period</div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>Start Date</mat-label>
+            <mat-icon matPrefix class="field-prefix">event</mat-icon>
+            <input matInput formControlName="startdate" type="date">
+            @if (f['startdate'].hasError('required') && f['startdate'].touched) {
+              <mat-error>Start date is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field">
+            <mat-label>End Date</mat-label>
+            <mat-icon matPrefix class="field-prefix">event_busy</mat-icon>
+            <input matInput formControlName="enddate" type="date">
+            @if (f['enddate'].hasError('required') && f['enddate'].touched) {
+              <mat-error>End date is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <mat-icon>{{ isEdit ? 'save' : 'person_add' }}</mat-icon>
+            <span>{{ isEdit ? 'Update User' : 'Save User' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>

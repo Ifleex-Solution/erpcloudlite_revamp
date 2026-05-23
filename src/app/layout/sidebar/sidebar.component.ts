@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
 import { NgClass } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
 
 interface NavChild {
   label: string;
@@ -26,7 +27,16 @@ interface NavItem {
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  user = { name: 'Super Admin', role: 'Admin' };
+  user = {
+    name: localStorage.getItem('username') ?? 'User',
+    role: localStorage.getItem('user_type') ?? 'Staff',
+  };
+
+  constructor(private auth: AuthService, private router: Router) {}
+
+  logout() {
+    this.auth.logout().subscribe(() => this.router.navigate(['/login']));
+  }
 
   navItems: NavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
@@ -57,7 +67,13 @@ export class SidebarComponent {
         { label: 'Service List', route: '/service/list' },
       ]
     },
-    { label: 'Settings', icon: 'settings', route: '/settings' },
+    { label: 'Settings', icon: 'settings', children: [
+        { label: 'Company', route: '/settings/company/list' },
+        { label: 'Users',   route: '/settings/user/list'    },
+        { label: 'Role',        route: '/settings/role/list'     },
+        { label: 'Assign Role', route: '/settings/userrole/list' },
+      ]
+    },
   ];
 
   toggle(item: NavItem): void {

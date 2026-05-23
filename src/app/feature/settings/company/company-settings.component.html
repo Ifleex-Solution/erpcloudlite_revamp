@@ -1,0 +1,190 @@
+<mat-card class="page-card">
+
+  <!-- Header -->
+  <div class="card-header">
+    <div class="header-icon">
+      <mat-icon>business</mat-icon>
+    </div>
+    <div>
+      <div class="header-title">Manage Company</div>
+      <div class="header-subtitle">View and update your company information</div>
+    </div>
+    <span class="header-spacer"></span>
+
+    @if (!loading) {
+      @if (!editMode) {
+        <button class="action-btn" mat-flat-button (click)="enableEdit()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      } @else {
+        <button class="cancel-btn" mat-stroked-button (click)="cancelEdit()" [disabled]="saving">
+          Cancel
+        </button>
+        <button class="action-btn" mat-flat-button (click)="save()" [disabled]="saving">
+          @if (saving) {
+            <mat-spinner diameter="18" color="accent"></mat-spinner>
+          } @else {
+            <mat-icon>save</mat-icon>
+          }
+          Save
+        </button>
+      }
+    }
+  </div>
+
+  <mat-card-content>
+
+    @if (loading) {
+      <div class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+
+      <form [formGroup]="form">
+
+        <!-- Company Info Section -->
+        <div class="section-title">
+          <mat-icon>info</mat-icon>
+          Company Information
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Company Name</mat-label>
+            <mat-icon matPrefix>apartment</mat-icon>
+            <input matInput formControlName="company_name" placeholder="Enter company name">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile</mat-label>
+            <mat-icon matPrefix>phone</mat-icon>
+            <input matInput formControlName="mobile" placeholder="+966 ...">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" placeholder="info@company.com">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Website</mat-label>
+            <mat-icon matPrefix>language</mat-icon>
+            <input matInput formControlName="website" placeholder="https://...">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>VAT No.</mat-label>
+            <mat-icon matPrefix>receipt_long</mat-icon>
+            <input matInput formControlName="vat_no">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>CR No.</mat-label>
+            <mat-icon matPrefix>article</mat-icon>
+            <input matInput formControlName="cr_no">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Address</mat-label>
+            <mat-icon matPrefix>location_on</mat-icon>
+            <textarea matInput formControlName="address" rows="2" placeholder="Company address"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Footer Text</mat-label>
+            <mat-icon matPrefix>text_fields</mat-icon>
+            <input matInput formControlName="footer_text" placeholder="Printed on receipts/reports">
+          </mat-form-field>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- System Section -->
+        <div class="section-title">
+          <mat-icon>admin_panel_settings</mat-icon>
+          System
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Instance Type</mat-label>
+            <mat-icon matPrefix>cloud</mat-icon>
+            <mat-select formControlName="instance_type">
+              <mat-option value="BETA">BETA</mat-option>
+              <mat-option value="LIVE">LIVE</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password Enable</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-select formControlName="password_enable">
+              <mat-option [value]="0">Disabled</mat-option>
+              <mat-option [value]="1">Enabled</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          @if (form.get('password_enable')?.value === 1) {
+            <mat-form-field appearance="outline">
+              <mat-label>System Password</mat-label>
+              <mat-icon matPrefix>key</mat-icon>
+              <input matInput formControlName="password" [type]="hidePass ? 'password' : 'text'">
+              <button mat-icon-button matSuffix type="button" (click)="hidePass = !hidePass">
+                <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+          }
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- Appearance Section -->
+        <div class="section-title">
+          <mat-icon>palette</mat-icon>
+          Appearance
+        </div>
+
+        <!-- Dark mode toggle -->
+        <div class="dark-toggle-row">
+          <div class="dark-toggle-info">
+            <mat-icon class="toggle-icon">{{ darkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+            <div>
+              <span class="toggle-label">Dark Mode</span>
+              <span class="toggle-sub">{{ darkMode ? 'Dark theme active' : 'Light theme active' }}</span>
+            </div>
+          </div>
+          <mat-slide-toggle
+            [checked]="darkMode"
+            (change)="toggleDark()"
+            [disabled]="!editMode"
+            color="primary">
+          </mat-slide-toggle>
+        </div>
+
+        <p class="colour-label">Theme Color</p>
+        <div class="theme-grid">
+          @for (theme of themeService.themes; track theme.id) {
+            <button
+              type="button"
+              class="theme-swatch"
+              [class.selected]="selectedTheme === theme.id"
+              [disabled]="!editMode"
+              (click)="selectTheme(theme.id)"
+              [attr.aria-label]="'Select ' + theme.label + ' theme'">
+              <span class="swatch-circle" [style.background]="theme.primary">
+                @if (selectedTheme === theme.id) {
+                  <mat-icon class="check-icon">check</mat-icon>
+                }
+              </span>
+              <span class="swatch-label">{{ theme.label }}</span>
+            </button>
+          }
+        </div>
+
+      </form>
+    }
+
+  </mat-card-content>
+</mat-card>

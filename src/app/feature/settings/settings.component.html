@@ -13,7 +13,6 @@
       <mat-card-title>Theme Color</mat-card-title>
       <mat-card-subtitle>Choose a primary color for the application</mat-card-subtitle>
     </mat-card-header>
-
     <mat-card-content>
       <div class="theme-grid">
         @for (theme of themeService.themes; track theme.id) {
@@ -21,8 +20,7 @@
             class="theme-swatch"
             [class.selected]="themeService.currentTheme() === theme.id"
             (click)="selectTheme(theme.id)"
-            [attr.aria-label]="'Select ' + theme.label + ' theme'"
-          >
+            [attr.aria-label]="'Select ' + theme.label + ' theme'">
             <span class="swatch-circle" [style.background]="theme.primary">
               @if (themeService.currentTheme() === theme.id) {
                 <mat-icon class="check-icon">check</mat-icon>
