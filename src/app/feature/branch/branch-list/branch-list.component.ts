@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -53,7 +54,14 @@ export class BranchListComponent implements OnInit, OnDestroy {
   pageSize     = 10;
   searchText   = '';
 
-  ngOnInit(): void {
+  private auth = inject(AuthService);
+  readonly subId = 2;
+  get canCreate() { return this.auth.canAccess(this.subId, 'create'); }
+  get canUpdate() { return this.auth.canAccess(this.subId, 'update'); }
+  get canDelete() { return this.auth.canAccess(this.subId, 'delete'); }
+
+  
+ngOnInit(): void {
     this.searchSubject$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -107,3 +115,5 @@ export class BranchListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }
+
+

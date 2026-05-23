@@ -41,10 +41,13 @@ export class ThemeService {
   }
 
   toggleDark(): void {
-    const next = !this.isDark();
-    this.isDark.set(next);
-    localStorage.setItem('app-dark', String(next));
-    this.applyDark(next);
+    this.setDark(!this.isDark());
+  }
+
+  setDark(dark: boolean): void {
+    this.isDark.set(dark);
+    localStorage.setItem('app-dark', String(dark));
+    this.applyDark(dark);
   }
 
   private applyTheme(id: string): void {

@@ -1,4 +1,4 @@
-.page-card {
+﻿.page-card {
   border-radius: 16px !important;
   box-shadow: 0 4px 24px rgba(0,0,0,0.07) !important;
   overflow: hidden;
@@ -10,7 +10,7 @@
   align-items: center;
   gap: 16px;
   padding: 24px 28px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--mat-sys-primary) 60%, #000) 0%, var(--mat-sys-primary) 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--app-header-primary) 60%, #000) 0%, var(--app-header-primary) 100%);
   color: #fff;
 
   .header-icon {
@@ -135,13 +135,13 @@ mat-card-content {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #1e2a3a;
+    color: var(--app-text);
   }
 
   .toggle-sub {
     display: block;
     font-size: 12px;
-    color: #6b7280;
+    color: var(--app-text-muted);
   }
 }
 
@@ -149,7 +149,7 @@ mat-card-content {
 .colour-label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--app-text);
   margin: 0 0 12px;
 }
 
@@ -207,5 +207,7 @@ mat-card-content {
 .swatch-label {
   font-size: 11px;
   font-weight: 600;
-  color: #374151;
+  color: var(--app-text);
 }
+
+

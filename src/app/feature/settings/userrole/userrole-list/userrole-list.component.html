@@ -9,10 +9,12 @@
       <div class="header-subtitle">Assign and manage roles for system users</div>
     </div>
     <span class="header-spacer"></span>
-    <button mat-flat-button class="add-btn" (click)="add()">
-      <mat-icon>add</mat-icon>
-      Assign Role
-    </button>
+    @if (canCreate) {
+      <button mat-flat-button class="add-btn" (click)="add()">
+        <mat-icon>add</mat-icon>
+        Assign Role
+      </button>
+    }
   </div>
 
   <mat-card-content>
@@ -61,12 +63,16 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let row">
-            <button mat-icon-button color="primary" matTooltip="Edit Status" (click)="edit(row)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" matTooltip="Remove" (click)="delete(row)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            @if (canUpdate) {
+              <button mat-icon-button color="primary" matTooltip="Edit Status" (click)="edit(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            }
+            @if (canDelete) {
+              <button mat-icon-button color="warn" matTooltip="Remove" (click)="delete(row)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
           </td>
         </ng-container>
 

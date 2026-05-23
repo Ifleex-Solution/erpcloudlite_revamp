@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -21,13 +22,25 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class LoginComponent {
   form: FormGroup;
-  loading = false;
-  error = '';
+  loading      = false;
+  error        = '';
   hidePassword = true;
 
+  private readonly screenRoutes: Record<number, string> = {
+    1: '/branch/list',
+    2: '/branch/list',
+    3: '/product/product-info/list',
+    6: '/service/list',
+    7: '/branch/list',
+    8: '/branch/list',
+    9: '/branch/list',
+    10: '/branch/list',
+  };
+
   constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
+    private fb:     FormBuilder,
+    private auth:   AuthService,
+    private theme:  ThemeService,
     private router: Router,
   ) {
     this.form = this.fb.group({
@@ -36,19 +49,26 @@ export class LoginComponent {
     });
   }
 
-  submit() {
+  submit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loading = true;
-    this.error = '';
+    this.error   = '';
     const { username, password } = this.form.value;
+
     this.auth.login(username, password).subscribe({
-      next: () => {
+      next: res => {
+        // Apply company theme from session
+        const company = res.company;
+        if (company.theme_color) this.theme.setTheme(company.theme_color);
+        this.theme.setDark(!!company.theme_dark);
+
         this.loading = false;
-        this.router.navigate(['/']);
+        const route = this.screenRoutes[res.user.screen] ?? '/branch/list';
+        this.router.navigate([route]);
       },
       error: err => {
         this.loading = false;
-        this.error = err.error?.message ?? 'Login failed. Please try again.';
+        this.error   = err.error?.message ?? 'Login failed. Please try again.';
       },
     });
   }

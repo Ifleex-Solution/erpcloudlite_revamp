@@ -13,7 +13,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'store', pathMatch: 'full' },
+      { path: '', redirectTo: 'branch/list', pathMatch: 'full' },
       {
         path: 'branch',
         loadChildren: () =>

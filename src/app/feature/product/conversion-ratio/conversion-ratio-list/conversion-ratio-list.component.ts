@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -25,7 +26,14 @@ export class ConversionRatioListComponent implements OnInit {
   total = 0; page = 1; pageSize = 10; search = ''; loading = false;
 
   constructor(private svc: ProductService, private router: Router) {}
-  ngOnInit() { this.load(); }
+  private auth = inject(AuthService);
+  readonly subId = 11;
+  get canCreate() { return this.auth.canAccess(this.subId, 'create'); }
+  get canUpdate() { return this.auth.canAccess(this.subId, 'update'); }
+  get canDelete() { return this.auth.canAccess(this.subId, 'delete'); }
+
+  
+ngOnInit() { this.load(); }
 
   load() {
     this.loading = true;
@@ -44,3 +52,5 @@ export class ConversionRatioListComponent implements OnInit {
     this.svc.deleteConversionRatio(row.id!).subscribe(() => this.load());
   }
 }
+
+

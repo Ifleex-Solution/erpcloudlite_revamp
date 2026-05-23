@@ -7,16 +7,18 @@ import { NgClass } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 
 interface NavChild {
-  label: string;
-  route: string;
+  label:       string;
+  route:       string;
+  submoduleId: number;
 }
 
 interface NavItem {
-  label: string;
-  icon: string;
-  route?: string;
-  children?: NavChild[];
-  expanded?: boolean;
+  label:        string;
+  icon:         string;
+  route?:       string;
+  submoduleId?: number;
+  children?:    NavChild[];
+  expanded?:    boolean;
 }
 
 @Component({
@@ -28,8 +30,8 @@ interface NavItem {
 })
 export class SidebarComponent {
   user = {
-    name: localStorage.getItem('username') ?? 'User',
-    role: localStorage.getItem('user_type') ?? 'Staff',
+    name: sessionStorage.getItem('username') ?? 'User',
+    role: sessionStorage.getItem('user_level') ?? 'Staff',
   };
 
   constructor(private auth: AuthService, private router: Router) {}
@@ -38,47 +40,56 @@ export class SidebarComponent {
     this.auth.logout().subscribe(() => this.router.navigate(['/login']));
   }
 
+  canRead(submoduleId: number): boolean {
+    return this.auth.canAccess(submoduleId, 'read');
+  }
+
+  hasAnyChildAccess(item: NavItem): boolean {
+    if (!item.children) return item.submoduleId ? this.canRead(item.submoduleId) : true;
+    return item.children.some(c => this.canRead(c.submoduleId));
+  }
+
   navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
-    { label: 'Branch',    icon: 'account_tree', children: [
-        { label: 'Add Branch',  route: '/branch/add' },
-        { label: 'Branch List', route: '/branch/list' },
+    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', submoduleId: 1 },
+    {
+      label: 'Branch', icon: 'account_tree', children: [
+        { label: 'Branch List', route: '/branch/list', submoduleId: 2 },
       ]
     },
-    { label: 'Store', icon: 'storefront', children: [
-        { label: 'Add Store',  route: '/store/add' },
-        { label: 'Store List', route: '/store/list' },
+    {
+      label: 'Store', icon: 'storefront', children: [
+        { label: 'Store List', route: '/store/list', submoduleId: 3 },
       ]
     },
-    { label: 'Product', icon: 'inventory_2', children: [
-        { label: 'Brand',             route: '/product/brand/list' },
-        { label: 'Origin Of Product', route: '/product/oop/list' },
-        { label: 'Category',          route: '/product/category/list' },
-        { label: 'Subcategory',       route: '/product/subcategory/list' },
-        { label: 'Unit',              route: '/product/unit/list' },
-        { label: 'Product',           route: '/product/product-info/list' },
-        { label: 'Product Group',     route: '/product/productgroup/list' },
-        { label: 'Conversion Ratio',  route: '/product/conversionratio/list' },
-        { label: 'Label Print',       route: '/product/labelprint' },
+    {
+      label: 'Product', icon: 'inventory_2', children: [
+        { label: 'Brand',             route: '/product/brand/list',           submoduleId: 4  },
+        { label: 'Origin Of Product', route: '/product/oop/list',             submoduleId: 5  },
+        { label: 'Category',          route: '/product/category/list',        submoduleId: 6  },
+        { label: 'Subcategory',       route: '/product/subcategory/list',     submoduleId: 7  },
+        { label: 'Unit',              route: '/product/unit/list',            submoduleId: 8  },
+        { label: 'Product',           route: '/product/product-info/list',    submoduleId: 9  },
+        { label: 'Product Group',     route: '/product/productgroup/list',    submoduleId: 10 },
+        { label: 'Conversion Ratio',  route: '/product/conversionratio/list', submoduleId: 11 },
+        { label: 'Label Print',       route: '/product/labelprint',           submoduleId: 9  },
       ]
     },
-    { label: 'Service', icon: 'build', children: [
-        { label: 'Add Service',  route: '/service/add' },
-        { label: 'Service List', route: '/service/list' },
+    {
+      label: 'Service', icon: 'build', children: [
+        { label: 'Service List', route: '/service/list', submoduleId: 12 },
       ]
     },
-    { label: 'Settings', icon: 'settings', children: [
-        { label: 'Company', route: '/settings/company/list' },
-        { label: 'Users',   route: '/settings/user/list'    },
-        { label: 'Role',        route: '/settings/role/list'     },
-        { label: 'Assign Role', route: '/settings/userrole/list' },
+    {
+      label: 'Settings', icon: 'settings', children: [
+        { label: 'Company',     route: '/settings/company/list',   submoduleId: 13 },
+        { label: 'Users',       route: '/settings/user/list',      submoduleId: 14 },
+        { label: 'Role',        route: '/settings/role/list',      submoduleId: 15 },
+        { label: 'Assign Role', route: '/settings/userrole/list',  submoduleId: 16 },
       ]
     },
   ];
 
   toggle(item: NavItem): void {
-    if (item.children) {
-      item.expanded = !item.expanded;
-    }
+    if (item.children) item.expanded = !item.expanded;
   }
 }

@@ -1,4 +1,4 @@
-.settings-page {
+﻿.settings-page {
   padding: 28px;
   max-width: 700px;
 }
@@ -10,12 +10,12 @@
     font-size: 22px;
     font-weight: 700;
     margin: 0 0 4px;
-    color: #1e2a3a;
+    color: var(--app-text);
   }
 
   .settings-subtitle {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--app-text-muted);
     margin: 0;
   }
 }
@@ -86,5 +86,6 @@
 .swatch-label {
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--app-text);
 }
+

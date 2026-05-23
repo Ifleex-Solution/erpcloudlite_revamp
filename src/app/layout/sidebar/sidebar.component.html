@@ -27,49 +27,54 @@
   <nav class="nav-list">
     @for (item of navItems; track item.label) {
 
-      @if (!item.children) {
-        <!-- Single route item -->
-        <a
-          class="nav-item"
-          [routerLink]="item.route"
-          routerLinkActive="active-link"
-          matRipple
-        >
-          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-          <span class="nav-label">{{ item.label }}</span>
-        </a>
-      } @else {
-        <!-- Expandable item -->
-        <div
-          class="nav-item nav-parent"
-          [ngClass]="{ 'expanded': item.expanded }"
-          (click)="toggle(item)"
-          matRipple
-        >
-          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-          <span class="nav-label">{{ item.label }}</span>
-          <mat-icon class="chevron">
-            {{ item.expanded ? 'expand_more' : 'chevron_right' }}
-          </mat-icon>
-        </div>
+      @if (hasAnyChildAccess(item)) {
 
-        @if (item.expanded) {
-          <div class="sub-menu">
-            @for (child of item.children; track child.route) {
-              <a
-                class="sub-item"
-                [routerLink]="child.route"
-                routerLinkActive="active-child"
-                matRipple
-              >
-                <span class="sub-dash">—</span>
-                {{ child.label }}
-              </a>
-            }
+        @if (!item.children) {
+          <!-- Single route item -->
+          <a
+            class="nav-item"
+            [routerLink]="item.route"
+            routerLinkActive="active-link"
+            matRipple
+          >
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span class="nav-label">{{ item.label }}</span>
+          </a>
+        } @else {
+          <!-- Expandable item -->
+          <div
+            class="nav-item nav-parent"
+            [ngClass]="{ 'expanded': item.expanded }"
+            (click)="toggle(item)"
+            matRipple
+          >
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span class="nav-label">{{ item.label }}</span>
+            <mat-icon class="chevron">
+              {{ item.expanded ? 'expand_more' : 'chevron_right' }}
+            </mat-icon>
           </div>
-        }
-      }
 
+          @if (item.expanded) {
+            <div class="sub-menu">
+              @for (child of item.children; track child.route) {
+                @if (canRead(child.submoduleId)) {
+                  <a
+                    class="sub-item"
+                    [routerLink]="child.route"
+                    routerLinkActive="active-child"
+                    matRipple
+                  >
+                    <span class="sub-dash">—</span>
+                    {{ child.label }}
+                  </a>
+                }
+              }
+            </div>
+          }
+        }
+
+      }
     }
   </nav>
 

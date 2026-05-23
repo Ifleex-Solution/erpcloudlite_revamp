@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -34,7 +35,14 @@ export class RoleListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<RoleListItem>([]);
   loading = false;
 
-  ngOnInit(): void { this.load(); }
+  private auth = inject(AuthService);
+  readonly subId = 15;
+  get canCreate() { return this.auth.canAccess(this.subId, 'create'); }
+  get canUpdate() { return this.auth.canAccess(this.subId, 'update'); }
+  get canDelete() { return this.auth.canAccess(this.subId, 'delete'); }
+
+  
+ngOnInit(): void { this.load(); }
 
   load(): void {
     this.loading = true;
@@ -57,3 +65,5 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }
+
+

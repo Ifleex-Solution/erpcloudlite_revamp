@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -45,7 +46,14 @@ export class UserListComponent implements OnInit, OnDestroy {
   pageSize     = 10;
   searchText   = '';
 
-  ngOnInit(): void {
+  private auth = inject(AuthService);
+  readonly subId = 14;
+  get canCreate() { return this.auth.canAccess(this.subId, 'create'); }
+  get canUpdate() { return this.auth.canAccess(this.subId, 'update'); }
+  get canDelete() { return this.auth.canAccess(this.subId, 'delete'); }
+
+  
+ngOnInit(): void {
     this.search$.pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => { this.pageIndex = 0; this.load(); });
     this.load();
@@ -95,3 +103,5 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }
+
+

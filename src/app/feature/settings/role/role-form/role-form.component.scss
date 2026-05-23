@@ -1,23 +1,23 @@
-.page-header {
+﻿.page-header {
   display: flex; align-items: center; margin-bottom: 20px;
 }
 
 .breadcrumb {
-  display: flex; align-items: center; gap: 4px; font-size: 13.5px; color: #64748b;
+  display: flex; align-items: center; gap: 4px; font-size: 13.5px; color: var(--app-text-muted);
   .bc-icon    { font-size: 18px; width: 18px; height: 18px; color: var(--mat-sys-primary); }
   .bc-sep     { font-size: 16px; width: 16px; height: 16px; }
   .bc-link    { cursor: pointer; color: var(--mat-sys-primary); font-weight: 500; &:hover { text-decoration: underline; } }
-  .bc-current { color: #1e293b; font-weight: 600; }
+  .bc-current { color: var(--app-text); font-weight: 600; }
 }
 
 .form-card {
-  background: #fff; border-radius: 16px;
+  background: var(--app-card-bg); border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden;
 }
 
 .card-header {
   display: flex; align-items: center; gap: 16px; padding: 24px 28px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--mat-sys-primary) 60%, #000) 0%, var(--mat-sys-primary) 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--app-header-primary) 60%, #000) 0%, var(--app-header-primary) 100%);
   color: #fff;
 
   .header-icon {
@@ -39,7 +39,7 @@
 
 .loading-overlay {
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 60px; gap: 16px; color: #64748b; font-size: 14px;
+  justify-content: center; padding: 60px; gap: 16px; color: var(--app-text-muted); font-size: 14px;
 }
 
 .form-body { padding: 28px; }
@@ -50,7 +50,7 @@
 
 .field-prefix {
   font-size: 18px !important; width: 18px !important;
-  height: 18px !important; color: #94a3b8 !important; margin-right: 4px;
+  height: 18px !important; color: var(--app-text-faint) !important; margin-right: 4px;
 }
 
 .module-section {
@@ -61,49 +61,49 @@
   display: flex; align-items: center; gap: 8px;
   font-size: 13px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1px; color: var(--mat-sys-primary); margin-bottom: 10px;
-  &::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, #e2e8f0, transparent); margin-left: 8px; }
+  &::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--app-border), transparent); margin-left: 8px; }
   mat-icon { font-size: 16px; width: 16px; height: 16px; }
 }
 
-.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; }
+.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--app-border); }
 
 .perm-table {
   width: auto; min-width: 560px; border-collapse: collapse; font-size: 13.5px;
 
   thead tr {
-    background: #f8fafc;
+    background: var(--app-surface-alt);
   }
 
   th, td {
     padding: 10px 14px; text-align: left;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--app-border-subtle);
   }
 
   th {
-    font-weight: 600; color: #475569; font-size: 12.5px;
+    font-weight: 600; color: var(--app-text-muted); font-size: 12.5px;
     text-transform: uppercase; letter-spacing: .5px;
   }
 
   tbody tr:last-child td { border-bottom: none; }
 
-  tbody tr:hover { background: #f8fafc; }
+  tbody tr:hover { background: var(--app-row-hover); }
 
-  .sl-col   { width: 48px;  text-align: center; color: #94a3b8; }
-  .name-col { width: 220px; font-weight: 500; color: #1e293b; }
+  .sl-col   { width: 48px;  text-align: center; color: var(--app-text-faint); }
+  .name-col { width: 220px; font-weight: 500; color: var(--app-text); }
   .perm-col { width: 100px; text-align: center; }
 }
 
 .perm-header {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  span { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: #64748b; }
+  span { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--app-text-muted); }
 }
 
 .form-actions {
   display: flex; justify-content: flex-end; gap: 12px;
-  margin-top: 28px; padding-top: 20px; border-top: 1px solid #f1f5f9;
+  margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--app-border-subtle);
 }
 
-.cancel-btn { border-radius: 8px !important; height: 42px; padding: 0 20px !important; color: #64748b !important; }
+.cancel-btn { border-radius: 8px !important; height: 42px; padding: 0 20px !important; color: var(--app-text-muted) !important; }
 
 .save-btn {
   border-radius: 8px !important; height: 42px; padding: 0 24px !important;
@@ -112,3 +112,4 @@
 }
 
 .btn-spinner { display: inline-block; ::ng-deep circle { stroke: #fff !important; } }
+
