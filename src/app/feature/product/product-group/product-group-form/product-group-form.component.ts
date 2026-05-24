@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -40,7 +40,7 @@ export class ProductGroupFormComponent implements OnInit {
     if (this.isEdit) {
       this.loading = true;
       this.svc.getProductGroup(this.id!).subscribe({
-        next: res => { this.form.patchValue({ code: res.data?.['code'], name: res.data?.['name'], invoice_group: res.data?.['invoice_group'], status: res.data?.['status'] }); this.loading = false; },
+        next: res => { this.form.patchValue({ code: res.data?.['code'], name: res.data?.['name'], invoice_group: res.data?.['invoice_group'], status: +(res.data?.['status'] ?? 0) }); this.loading = false; },
         error: () => { this.loading = false; }
       });
     } else {
@@ -54,7 +54,7 @@ export class ProductGroupFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const obs = this.isEdit ? this.svc.updateProductGroup(this.id!, this.form.value) : this.svc.saveProductGroup(this.form.value);
+    const obs = this.isEdit ? this.svc.updateProductGroup(this.id!, { ...this.form.value, status: +(this.form.value.status ?? 0) }) : this.svc.saveProductGroup({ ...this.form.value, status: +(this.form.value.status ?? 0) });
     obs.subscribe({ next: () => { this.saving = false; this.goBack(); }, error: () => { this.saving = false; } });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -33,7 +33,7 @@ export class OopFormComponent implements OnInit {
     if (this.isEdit) {
       this.loading = true;
       this.svc.getOop(this.id!).subscribe({
-        next: res => { this.form.patchValue({ name: res.data?.['name'], status: res.data?.['status'] }); this.loading = false; },
+        next: res => { this.form.patchValue({ name: res.data?.['name'], status: +(res.data?.['status'] ?? 0) }); this.loading = false; },
         error: () => { this.loading = false; }
       });
     }
@@ -45,7 +45,7 @@ export class OopFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const obs = this.isEdit ? this.svc.updateOop(this.id!, this.form.value) : this.svc.saveOop(this.form.value);
+    const obs = this.isEdit ? this.svc.updateOop(this.id!, { ...this.form.value, status: +(this.form.value.status ?? 0) }) : this.svc.saveOop({ ...this.form.value, status: +(this.form.value.status ?? 0) });
     obs.subscribe({ next: () => { this.saving = false; this.goBack(); }, error: () => { this.saving = false; } });
   }
 }

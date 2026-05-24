@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -48,7 +48,7 @@ export class ConversionRatioFormComponent implements OnInit {
       this.svc.getConversionRatio(this.id!).subscribe({
         next: res => {
           const d = res.data as any;
-          this.form.patchValue({ product_id: d.product, unit_id: d.subunit, conversion_ratio: d.conversion_ratio, status: d.status });
+          this.form.patchValue({ product_id: d.product, unit_id: d.subunit, conversion_ratio: d.conversion_ratio, status: +(d.status ?? 0) });
           this.form.get('product_id')!.disable();
           this.form.get('unit_id')!.disable();
           this.loading = false;
@@ -64,7 +64,7 @@ export class ConversionRatioFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const val = { ...this.form.getRawValue() };
+    const val = { ...this.form.getRawValue(), status: +(this.form.getRawValue().status ?? 0) };
     const obs = this.isEdit ? this.svc.updateConversionRatio(this.id!, val) : this.svc.saveConversionRatio(val);
     obs.subscribe({ next: () => { this.saving = false; this.goBack(); }, error: () => { this.saving = false; } });
   }

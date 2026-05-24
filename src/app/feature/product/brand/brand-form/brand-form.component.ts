@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -38,7 +38,7 @@ export class BrandFormComponent implements OnInit {
     if (this.isEdit) {
       this.loading = true;
       this.svc.getBrand(this.id!).subscribe({
-        next: res => { this.form.patchValue({ name: res.data?.['name'], status: res.data?.['status'] }); this.loading = false; },
+        next: res => { this.form.patchValue({ name: res.data?.['name'], status: +(res.data?.['status'] ?? 0) }); this.loading = false; },
         error: () => { this.loading = false; }
       });
     }
@@ -51,7 +51,7 @@ export class BrandFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const payload = this.form.value;
+    const payload = { ...this.form.value, status: +(this.form.value.status ?? 0) };
     const obs = this.isEdit ? this.svc.updateBrand(this.id!, payload) : this.svc.saveBrand(payload);
     obs.subscribe({
       next: () => { this.saving = false; this.goBack(); },

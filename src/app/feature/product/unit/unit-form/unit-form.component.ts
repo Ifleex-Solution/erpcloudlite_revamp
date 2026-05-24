@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -37,7 +37,7 @@ export class UnitFormComponent implements OnInit {
     if (this.isEdit) {
       this.loading = true;
       this.svc.getUnit(this.id!).subscribe({
-        next: res => { this.form.patchValue({ name: res.data?.['name'], display_name: res.data?.['display_name'], status: res.data?.['status'] }); this.loading = false; },
+        next: res => { this.form.patchValue({ name: res.data?.['name'], display_name: res.data?.['display_name'], status: +(res.data?.['status'] ?? 0) }); this.loading = false; },
         error: () => { this.loading = false; }
       });
     }
@@ -49,7 +49,7 @@ export class UnitFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const obs = this.isEdit ? this.svc.updateUnit(this.id!, this.form.value) : this.svc.saveUnit(this.form.value);
+    const obs = this.isEdit ? this.svc.updateUnit(this.id!, { ...this.form.value, status: +(this.form.value.status ?? 0) }) : this.svc.saveUnit({ ...this.form.value, status: +(this.form.value.status ?? 0) });
     obs.subscribe({ next: () => { this.saving = false; this.goBack(); }, error: () => { this.saving = false; } });
   }
 }

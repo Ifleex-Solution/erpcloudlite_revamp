@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -44,7 +44,7 @@ export class SubcategoryFormComponent implements OnInit {
       this.loading = true;
       this.svc.getSubcategory(this.id!).subscribe({
         next: res => {
-          this.form.patchValue({ name: res.data?.['name'], category_id: res.data?.['category_id'], status: res.data?.['status'] });
+          this.form.patchValue({ name: res.data?.['name'], category_id: res.data?.['category_id'], status: +(res.data?.['status'] ?? 0) });
           this.loading = false;
         },
         error: () => { this.loading = false; }
@@ -58,7 +58,7 @@ export class SubcategoryFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const obs = this.isEdit ? this.svc.updateSubcategory(this.id!, this.form.value) : this.svc.saveSubcategory(this.form.value);
+    const obs = this.isEdit ? this.svc.updateSubcategory(this.id!, { ...this.form.value, status: +(this.form.value.status ?? 0) }) : this.svc.saveSubcategory({ ...this.form.value, status: +(this.form.value.status ?? 0) });
     obs.subscribe({ next: () => { this.saving = false; this.goBack(); }, error: () => { this.saving = false; } });
   }
 }
