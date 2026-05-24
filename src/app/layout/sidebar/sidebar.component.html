@@ -33,8 +33,8 @@
           <!-- Single route item -->
           <a
             class="nav-item"
+            [class.active-link]="isActive(item.route!)"
             [routerLink]="item.route"
-            routerLinkActive="active-link"
             matRipple
           >
             <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
@@ -44,25 +44,25 @@
           <!-- Expandable item -->
           <div
             class="nav-item nav-parent"
-            [ngClass]="{ 'expanded': item.expanded }"
+            [ngClass]="{ 'expanded': item.expanded || isChildActive(item) }"
             (click)="toggle(item)"
             matRipple
           >
             <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
             <span class="nav-label">{{ item.label }}</span>
             <mat-icon class="chevron">
-              {{ item.expanded ? 'expand_more' : 'chevron_right' }}
+              {{ (item.expanded || isChildActive(item)) ? 'expand_more' : 'chevron_right' }}
             </mat-icon>
           </div>
 
-          @if (item.expanded) {
+          @if (item.expanded || isChildActive(item)) {
             <div class="sub-menu">
               @for (child of item.children; track child.route) {
                 @if (canRead(child.submoduleId)) {
                   <a
                     class="sub-item"
+                    [class.active-child]="isActive(child.route)"
                     [routerLink]="child.route"
-                    routerLinkActive="active-child"
                     matRipple
                   >
                     <span class="sub-dash">—</span>

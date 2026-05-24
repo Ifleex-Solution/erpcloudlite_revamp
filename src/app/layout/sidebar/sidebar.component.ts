@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
@@ -24,7 +25,7 @@ interface NavItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, MatIconModule, MatDividerModule, MatRippleModule, NgClass],
+  imports: [RouterLink, MatIconModule, MatDividerModule, MatRippleModule, NgClass],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -34,7 +35,11 @@ export class SidebarComponent {
     role: sessionStorage.getItem('user_level') ?? 'Staff',
   };
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      this.navItems.forEach(item => item.expanded = false);
+    });
+  }
 
   logout() {
     this.auth.logout().subscribe(() => this.router.navigate(['/login']));
@@ -49,18 +54,23 @@ export class SidebarComponent {
     return item.children.some(c => this.canRead(c.submoduleId));
   }
 
+  // Strip /list so /store/add and /store/edit/1 all activate the same nav item
+  private basePath(route: string): string {
+    return route.replace(/\/list$/, '');
+  }
+
+  isActive(route: string): boolean {
+    return this.router.url.startsWith(this.basePath(route));
+  }
+
+  isChildActive(item: NavItem): boolean {
+    return item.children?.some(c => this.isActive(c.route)) ?? false;
+  }
+
   navItems: NavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', submoduleId: 1 },
-    {
-      label: 'Branch', icon: 'account_tree', children: [
-        { label: 'Branch List', route: '/branch/list', submoduleId: 2 },
-      ]
-    },
-    {
-      label: 'Store', icon: 'storefront', children: [
-        { label: 'Store List', route: '/store/list', submoduleId: 3 },
-      ]
-    },
+    { label: 'Branch', icon: 'account_tree', route: '/branch/list', submoduleId: 2 },
+    { label: 'Store',  icon: 'storefront',   route: '/store/list',  submoduleId: 3 },
     {
       label: 'Product', icon: 'inventory_2', children: [
         { label: 'Brand',             route: '/product/brand/list',           submoduleId: 4  },
@@ -90,6 +100,9 @@ export class SidebarComponent {
   ];
 
   toggle(item: NavItem): void {
-    if (item.children) item.expanded = !item.expanded;
+    if (!item.children) return;
+    const opening = !item.expanded;
+    this.navItems.forEach(i => i.expanded = false);
+    if (opening) item.expanded = true;
   }
 }
