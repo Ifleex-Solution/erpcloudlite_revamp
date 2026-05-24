@@ -117,6 +117,15 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
 
     req$.pipe(takeUntil(this.destroy$)).subscribe({
       next: res => {
+        // Update sessionStorage company so theme persists on reload
+        try {
+          const stored = JSON.parse(sessionStorage.getItem('company') ?? '{}');
+          stored.theme_color = this.selectedTheme;
+          stored.theme_dark  = this.darkMode ? 1 : 0;
+          sessionStorage.setItem('company', JSON.stringify(stored));
+        } catch {}
+        this.themeService.setTheme(this.selectedTheme);
+        this.themeService.setDark(this.darkMode);
         this.message.success(res.message ?? (this.isEdit ? 'Company updated.' : 'Company saved.'));
         this.goBack();
       },

@@ -8,6 +8,26 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script>
+    (function () {
+      var validThemes = ['theme-azure','theme-violet','theme-rose','theme-green','theme-orange','theme-teal'];
+      var theme = 'theme-azure';
+      var dark  = false;
+      try {
+        var company = JSON.parse(sessionStorage.getItem('company') || '{}');
+        if (company && company.theme_color && validThemes.indexOf(company.theme_color) !== -1) {
+          theme = company.theme_color;
+        } else {
+          var saved = sessionStorage.getItem('app-theme');
+          if (saved && validThemes.indexOf(saved) !== -1) theme = saved;
+        }
+        dark = company && company.theme_dark ? !!+company.theme_dark
+             : sessionStorage.getItem('app-dark') === 'true';
+      } catch (e) {}
+      document.documentElement.classList.add(theme);
+      if (dark) document.documentElement.classList.add('dark-mode');
+    })();
+  </script>
 </head>
 <body class="mat-typography">
   <app-root></app-root>

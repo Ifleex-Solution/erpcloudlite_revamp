@@ -45,6 +45,7 @@ const SESSION_KEYS = [
   'user_id', 'username', 'fullname', 'first_name', 'last_name',
   'user_type', 'screen', 'user_level',
   'company', 'permissions',
+  'app-theme', 'app-dark',
 ];
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;

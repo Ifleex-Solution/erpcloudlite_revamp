@@ -4,6 +4,13 @@
 
 .sidenav {
   width: 240px;
+  background: #1e2a3a;
+  border-right: none !important;
+
+  app-sidebar {
+    display: block;
+    height: 100%;
+  }
 }
 
 .main-content {

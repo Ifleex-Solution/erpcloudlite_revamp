@@ -22,21 +22,31 @@ export class ThemeService {
   isDark        = signal<boolean>(false);
 
   constructor() {
-    const savedTheme = localStorage.getItem('app-theme');
-    const savedDark  = localStorage.getItem('app-dark') === 'true';
+    // Priority: company object in session → separate session keys → defaults
+    let initial = 'theme-azure';
+    let dark    = false;
 
-    const initial = savedTheme && this.themes.find(t => t.id === savedTheme)
-      ? savedTheme : 'theme-azure';
+    try {
+      const company = JSON.parse(sessionStorage.getItem('company') ?? '{}');
+      if (company?.theme_color && this.themes.find(t => t.id === company.theme_color)) {
+        initial = company.theme_color;
+      } else {
+        const saved = sessionStorage.getItem('app-theme');
+        if (saved && this.themes.find(t => t.id === saved)) initial = saved;
+      }
+      dark = company?.theme_dark ? !!+company.theme_dark
+           : sessionStorage.getItem('app-dark') === 'true';
+    } catch {}
 
     this.currentTheme.set(initial);
-    this.isDark.set(savedDark);
+    this.isDark.set(dark);
     this.applyTheme(initial);
-    this.applyDark(savedDark);
+    this.applyDark(dark);
   }
 
   setTheme(id: string): void {
     this.currentTheme.set(id);
-    localStorage.setItem('app-theme', id);
+    sessionStorage.setItem('app-theme', id);
     this.applyTheme(id);
   }
 
@@ -46,7 +56,7 @@ export class ThemeService {
 
   setDark(dark: boolean): void {
     this.isDark.set(dark);
-    localStorage.setItem('app-dark', String(dark));
+    sessionStorage.setItem('app-dark', String(dark));
     this.applyDark(dark);
   }
 
