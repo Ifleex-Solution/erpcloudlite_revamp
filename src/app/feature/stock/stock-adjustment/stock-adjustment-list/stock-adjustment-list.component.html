@@ -1,0 +1,114 @@
+<mat-card class="page-card">
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="header-icon"><mat-icon>inventory</mat-icon></div>
+    <div>
+      <div class="header-title">Stock Adjustment</div>
+      <div class="header-subtitle">Manage stock adjustments, transfers and disposals</div>
+    </div>
+    <span class="header-spacer"></span>
+    @if (canCreate) {
+      <button mat-flat-button class="add-btn" (click)="add()">
+        <mat-icon>add</mat-icon> New Adjustment
+      </button>
+    }
+  </div>
+
+  <!-- Filters -->
+  <div class="table-toolbar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="search" (ngModelChange)="onSearch()" placeholder="Search...">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="date-field">
+      <mat-label>From Date</mat-label>
+      <input matInput type="date" [(ngModel)]="fdate">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="date-field">
+      <mat-label>To Date</mat-label>
+      <input matInput type="date" [(ngModel)]="tdate">
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="onFilter()">
+      <mat-icon>filter_list</mat-icon> Filter
+    </button>
+    <button mat-stroked-button (click)="clearFilter()">
+      <mat-icon>clear</mat-icon> Clear
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container" [class.table-loading]="loading">
+    @if (loading) { <div class="loading-overlay"><mat-spinner diameter="36"></mat-spinner></div> }
+
+    <table mat-table [dataSource]="data" class="data-table">
+      <ng-container matColumnDef="sl">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let r; let i = index">{{ (page - 1) * pageSize + i + 1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let r">{{ r.date }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="stock_type">
+        <th mat-header-cell *matHeaderCellDef>Stock Type</th>
+        <td mat-cell *matCellDef="let r">
+          <span class="chip chip-blue">{{ r.stock_type }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="incident_type">
+        <th mat-header-cell *matHeaderCellDef>Incident Type</th>
+        <td mat-cell *matCellDef="let r">
+          <span class="chip chip-green">{{ r.incident_type }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let r">
+          @if (canUpdate) {
+            <button mat-icon-button color="primary" (click)="edit(r)" title="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
+          @if (canDelete) {
+            <button mat-icon-button color="warn" (click)="delete(r)" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let r; columns: displayedColumns;"></tr>
+
+      @if (!loading && data.length === 0) {
+        <tr class="mat-row">
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+            <mat-icon>inventory_2</mat-icon>
+            <p>No stock adjustments found</p>
+          </td>
+        </tr>
+      }
+    </table>
+
+    <mat-paginator
+      [length]="total"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 50]"
+      (page)="onPage($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</mat-card>

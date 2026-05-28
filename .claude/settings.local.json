@@ -40,7 +40,16 @@
       "Bash(node -e ' *)",
       "Bash(./mysql.exe -u root betalite -e ' *)",
       "Bash(\"C:/xampp/mysql/bin/mysql.exe\" -u root betalite -e \"ALTER TABLE company_information ADD COLUMN IF NOT EXISTS theme_color VARCHAR\\(50\\) NOT NULL DEFAULT 'theme-azure', ADD COLUMN IF NOT EXISTS theme_dark TINYINT\\(1\\) NOT NULL DEFAULT 0;\")",
-      "Bash(dir \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\app\\\\feature\\\\store\" /b /s)"
+      "Bash(dir \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\app\\\\feature\\\\store\" /b /s)",
+      "Bash(python)",
+      "Bash(git show *)",
+      "Bash(cat /tmp/store-list.html)",
+      "Read(//tmp/**)",
+      "Bash(cat /tmp/brand-list.html)",
+      "Bash(git checkout *)",
+      "Bash(python3 -c ' *)",
+      "Bash(dir /s /b \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\*theme.service*\")",
+      "Bash(dir /s /b \"f:\\\\Angular Projects\\\\erpcloudlite-revamp\\\\src\\\\app\\\\feature\\\\settings\\\\company\\\\*form*\")"
     ],
     "additionalDirectories": [
       "C:\\xampp\\htdocs\\erpcloudlite-backend\\config",

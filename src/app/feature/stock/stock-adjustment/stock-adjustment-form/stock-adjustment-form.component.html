@@ -1,0 +1,211 @@
+<!-- Breadcrumb -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <mat-icon class="bc-icon">inventory</mat-icon>
+    <span class="bc-link" (click)="goBack()">Stock Adjustment</span>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ isEdit ? 'Edit Adjustment' : 'New Adjustment' }}</span>
+  </div>
+  <button mat-stroked-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Back to List
+  </button>
+</div>
+
+<!-- Form Card -->
+<div class="form-card">
+  <div class="card-header">
+    <div class="header-icon"><mat-icon>{{ isEdit ? 'edit' : 'add_circle' }}</mat-icon></div>
+    <div>
+      <div class="header-title">{{ isEdit ? 'Edit Stock Adjustment' : 'New Stock Adjustment' }}</div>
+      <div class="header-subtitle">Fill in the header then add product lines below</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="44"></mat-spinner>
+      <p>Loading...</p>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-body">
+
+      <!-- Header fields -->
+      <div class="section-label"><mat-icon>info</mat-icon> Header</div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Date</mat-label>
+          <input matInput type="date" formControlName="date">
+          @if (form.get('date')?.hasError('required') && form.get('date')?.touched) {
+            <mat-error>Date is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Incident Type</mat-label>
+          <mat-select formControlName="incident_type" (selectionChange)="onIncidentTypeChange()">
+            <mat-option value="openingstock">Opening Stock</mat-option>
+            <mat-option value="storetransfer">Store Transfer</mat-option>
+            <mat-option value="stockdisposal">Stock Disposal</mat-option>
+            <mat-option value="stockadjustment">Stock Adjustment</mat-option>
+          </mat-select>
+          @if (form.get('incident_type')?.hasError('required') && form.get('incident_type')?.touched) {
+            <mat-error>Incident type is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Stock Type</mat-label>
+          <mat-select formControlName="stock_type" (selectionChange)="onStockTypeChange()">
+            @for (opt of stockTypeOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('stock_type')?.hasError('required') && form.get('stock_type')?.touched) {
+            <mat-error>Stock type is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="field full-width">
+        <mat-label>Reason</mat-label>
+        <textarea matInput formControlName="reason" rows="2" placeholder="Optional reason..."></textarea>
+      </mat-form-field>
+
+      <!-- Items Table -->
+      <div class="section-label" style="margin-top: 16px"><mat-icon>list</mat-icon> Items</div>
+
+      <div class="items-wrapper" formArrayName="items">
+        <div class="table-scroll">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>Product <span class="req">*</span></th>
+                <th>Store <span class="req">*</span></th>
+                <th>Batch</th>
+                <th>Unit <span class="req">*</span></th>
+                <th>Av.Qty</th>
+                <th>Adj.Type <span class="req">*</span></th>
+                <th>Adj.Qty <span class="req">*</span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of items.controls; track $index; let i = $index) {
+                <tr [formGroupName]="i" [class.row-invalid]="row.invalid && row.touched">
+                  <!-- Product -->
+                  <td class="td-product">
+                    <input
+                      class="cell-input cell-input-text"
+                      type="text"
+                      formControlName="product_name"
+                      placeholder="Search product..."
+                      autocomplete="off"
+                      [matAutocomplete]="productAuto"
+                      (input)="filterProducts(i, $any($event.target).value)">
+                    <mat-autocomplete #productAuto="matAutocomplete"
+                      [displayWith]="displayProduct"
+                      (optionSelected)="onProductSelect(i, $event.option.value)">
+                      @for (p of rowStates[i].filteredProducts; track p.id) {
+                        <mat-option [value]="p">{{ p.name }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </td>
+
+                  <!-- Store -->
+                  <td class="td-store">
+                    <select class="cell-select" formControlName="store_id" (change)="onStoreChange(i)">
+                      <option value="">-- Select --</option>
+                      @for (s of stores; track s.id) {
+                        <option [value]="s.id">{{ s.name }}</option>
+                      }
+                    </select>
+                  </td>
+
+                  <!-- Batch -->
+                  <td class="td-batch">
+                    <select class="cell-select" formControlName="batch_id" (change)="onBatchChange(i)">
+                      <option value="">-- Select --</option>
+                      @for (b of rowStates[i].batches; track b.id) {
+                        <option [value]="b.id">{{ b.batchid }}</option>
+                      }
+                    </select>
+                  </td>
+
+                  <!-- Unit -->
+                  <td class="td-unit">
+                    <select class="cell-select" formControlName="unit_id" (change)="onUnitChange(i)">
+                      <option value="">-- Select --</option>
+                      @for (u of rowStates[i].subunits; track u.unit_id) {
+                        <option [value]="u.unit_id">{{ u.unit_name }}</option>
+                      }
+                    </select>
+                  </td>
+
+                  <!-- Av.Qty (read-only) -->
+                  <td class="td-avqty">
+                    <span class="avqty-val">{{ getAvQtyDisplay(i) }}</span>
+                  </td>
+
+                  <!-- Adj Type -->
+                  <td class="td-adj">
+                    <select class="cell-select" formControlName="adj_type">
+                      <option value="">-- Select --</option>
+                      @for (opt of adjTypeOptions; track opt.value) {
+                        <option [value]="opt.value">{{ opt.label }}</option>
+                      }
+                    </select>
+                  </td>
+
+                  <!-- Adj Qty -->
+                  <td class="td-qty">
+                    <input
+                      class="cell-input"
+                      type="number"
+                      formControlName="adj_qty"
+                      placeholder="0.00"
+                      min="0"
+                      (change)="onAdjQtyChange(i)">
+                  </td>
+
+                  <!-- Delete -->
+                  <td class="td-action">
+                    @if (i > 0) {
+                      <button mat-icon-button type="button" color="warn" (click)="removeRow(i)" title="Remove row">
+                        <mat-icon>remove_circle_outline</mat-icon>
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="add-row-bar">
+          <button mat-stroked-button type="button" color="primary" (click)="addRow()">
+            <mat-icon>add</mat-icon> Add Row
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="goBack()" [disabled]="saving" class="cancel-btn">
+          <mat-icon>close</mat-icon> Cancel
+        </button>
+        <button mat-flat-button type="submit" [disabled]="saving" class="save-btn">
+          @if (saving) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <ng-container>
+              <mat-icon>{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
+              <span>{{ isEdit ? 'Update' : 'Save' }}</span>
+            </ng-container>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>

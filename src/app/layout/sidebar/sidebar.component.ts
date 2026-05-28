@@ -85,6 +85,11 @@ export class SidebarComponent {
       ]
     },
     {
+      label: 'Stock', icon: 'warehouse', children: [
+        { label: 'Stock', route: '/stock/adjustment/list', submoduleId: 17 },
+      ]
+    },
+    {
       label: 'Service', icon: 'build', children: [
         { label: 'Service List', route: '/service/list', submoduleId: 12 },
       ]
